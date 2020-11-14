@@ -38,6 +38,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12'
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '^3.9'
     - name: Install jsonnet
       run: sudo snap install jsonnet
     - name: Checkout
@@ -46,6 +50,8 @@ jobs:
         submodules: recursive
 
     - run: npm install
+    - name: 'Generate index: AWS CloudFormation'
+      run: hack/generate-index-cfn.py
     - run: make firefox
     - name: web-ext build (Firefox)
       uses: kewisch/action-web-ext@v1
