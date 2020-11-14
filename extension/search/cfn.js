@@ -8,40 +8,29 @@
 
 class CfnSearcher {
     constructor(rawIndex) {
-        this.index = rawIndex;
-        this.docs = Object.keys(this.index);
-    }
-
-    // Search logic adopted from: https://github.com/huhu/cpp-search-extension/blob/242b89d5e03919438035d2cdb1990be6f99376f5/extension/search/std.js
-    // Licensed under Apache 2.0, Copyright huhu.io
-    search(query) {
-        query = query.toLowerCase();
-        let result = [];
-        for (let doc of this.docs) {
-            if (doc.length < query.length) continue;
-
-            let index = doc.toLowerCase().indexOf(query);
-            if (index !== -1) {
-                result.push({
-                    name: doc,
-                    matchIndex: index,
-                });
-            }
-        }
-
-        return result.sort((a, b) => {
-            if (a.matchIndex === b.matchIndex) {
-                return a.name.length - b.name.length;
-            }
-            return a.matchIndex - b.matchIndex;
-        }).map(item => {
-            let [path, description] = this.index[item.name];
+        this.index = Object.entries(rawIndex).map(([name, [path, description]]) => {
             return {
-                name: item.name,
+                name,
                 path,
                 description,
             };
-        })
+        }).sort(({name: aName}, {name: bName}) => {
+            // We sort results by length first, lexicographically second.
+            if (aName.length !== bName.length) {
+                return aName.length - bName.length;
+            } else {
+                return aName.localeCompare(bName);
+            }
+        });
+        this.searcher = new FuzzySearch(
+            this.index,
+            ["name", "description"],
+            {sort: true},
+        );
+    }
+
+    search(query) {
+        return this.searcher.search(query);
     }
 
     format(index, doc) {

@@ -2,5 +2,6 @@
 .DS_Store
 node_modules/
 extension/manifest.json
+extension/vendored/
 profiles/
 web-ext-artifacts/

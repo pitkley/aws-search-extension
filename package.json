@@ -1,0 +1,23 @@
+{
+  "name": "aws-search-extension",
+  "version": "0.1.0",
+  "description": "A search-extension for quick, fuzzy-search results for AWS developers!",
+  "author": "Pit Kleyersburg <pitkley@googlemail.com",
+  "license": "Apache-2.0/MIT",
+  "dependencies": {
+    "fuzzy-search": "^3.2.1"
+  },
+  "devDependencies": {
+    "vendor-copy": "^2.0.0",
+    "web-ext": "^5.3.0"
+  },
+  "scripts": {
+    "postinstall": "vendor-copy"
+  },
+  "vendorCopy": [
+    {
+      "from": "node_modules/fuzzy-search/dist/FuzzySearch.js",
+      "to": "extension/vendored/fuzzy-search/FuzzySearch.js"
+    }
+  ]
+}
