@@ -13,6 +13,7 @@
   },
   "scripts": {
     "postinstall": "vendor-copy",
+    "prebuild": "hack/generate-index-cfn.py",
     "build": "web-ext build --source-dir=extension/ --no-input=true --overwrite-dest=true",
     "build:firefox": "make firefox && npm run build",
     "build:chrome": "make chrome && npm run build"
