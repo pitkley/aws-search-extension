@@ -1,4 +1,5 @@
 local manifest = import 'core/manifest.libsonnet';
+local utils = import 'core/utils.libsonnet';
 local icons() = {
   [size]: 'logo.png'
   for size in ['16', '48', '128']
@@ -11,6 +12,7 @@ local json = manifest.new(
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
              .addIcons(icons())
+             .addBackgroundScripts(utils.js_files('command', ['help']))
              .addBackgroundScripts(['main.js']);
 
 json
