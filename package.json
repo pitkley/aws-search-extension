@@ -12,7 +12,10 @@
     "web-ext": "^5.3.0"
   },
   "scripts": {
-    "postinstall": "vendor-copy"
+    "postinstall": "vendor-copy",
+    "build": "web-ext build --source-dir=extension/ --no-input=true --overwrite-dest=true",
+    "build:firefox": "make firefox && npm run build",
+    "build:chrome": "make chrome && npm run build"
   },
   "vendorCopy": [
     {

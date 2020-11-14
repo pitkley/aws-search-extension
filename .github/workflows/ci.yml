@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+    - staging
+    - trying
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  check-license-headers:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check license headers
+      run: |
+        ./hack/check-license-headers.sh
+
+  yamllint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: yamllint
+      uses: ibiqlik/action-yamllint@v1.0.0
+
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install node toolchain
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - name: Install jsonnet
+      run: sudo snap install jsonnet
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - run: npm install
+    - run: make firefox
+    - name: web-ext build (Firefox)
+      uses: kewisch/action-web-ext@v1
+      with:
+        cmd: build
+        source: extension
+    - run: make chrome
+    - name: web-ext build (Chrome)
+      uses: kewisch/action-web-ext@v1
+      with:
+        cmd: build
+        source: extension
