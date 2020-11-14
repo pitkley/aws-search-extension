@@ -13,6 +13,8 @@ local json = manifest.new(
 )
              .addIcons(icons())
              .addBackgroundScripts(utils.js_files('command', ['help']))
+             .addBackgroundScripts(utils.js_files('index', ['cfn']))
+             .addBackgroundScripts(utils.js_files('search', ['cfn']))
              .addBackgroundScripts(['main.js']);
 
 json
