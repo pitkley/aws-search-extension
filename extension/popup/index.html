@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            overflow-x: hidden;
+            width: 350px;
+            height: 200px;
+        }
+
+        table {
+            font-size: 100%;
+            border-collapse: collapse;
+        }
+
+        table td {
+            border-bottom: 1px solid darkgrey;
+            border-right: 1px solid darkgrey;
+        }
+        table thead td {
+            border-bottom: 2px solid black;
+        }
+        table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+        table tr td:last-child {
+            border-right: 0;
+        }
+    </style>
+</head>
+<body>
+<h1>AWS search extensions</h1>
+<p>Provides search results for AWS API references and the AWS CloudFormation reference.</p>
+<p>You can use the following commands to search:</p>
+<table>
+    <thead>
+    <tr>
+        <td>Prefix</td>
+        <td>Description</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><em>(no prefix)</em></td>
+        <td>Search the AWS CloudFormation documentation</td>
+    </tr>
+    <tr>
+        <td><code>/</code></td>
+        <td>Search all API references</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
