@@ -11,12 +11,12 @@ class ApiSearcher {
         const globalOperationIndex = [];
         const serviceSearchIndex = [];
         this.services = {};
-        Object.entries(rawIndex).map(([serviceName, [alternativeNames, documentationBaseUrl, serviceIndex]]) => {
+        Object.entries(rawIndex).map(([serviceName, [serviceVersion, alternativeNames, serviceIndex]]) => {
             const operationEntries = Object.entries(serviceIndex).map(([operationName, [summary, documentationUrl]]) => ({
                 service: serviceName,
+                serviceVersion,
                 operation: operationName,
                 summary,
-                documentationBaseUrl,
                 documentationUrl,
             })).sort(({operation: a}, {operation: b}) => lengthThenLexicographicSort(a, b));
 
@@ -68,11 +68,7 @@ class ApiSearcher {
     format(index, doc) {
         let documentationUrl = doc.documentationUrl;
         if (!documentationUrl) {
-            if (doc.documentationBaseUrl) {
-                documentationUrl = `${doc.documentationBaseUrl}API_${doc.operation}.html`;
-            } else {
-                documentationUrl = ApiSearcher.searchUrl(`${doc.service} ${doc.operation}`);
-            }
+            documentationUrl = ApiSearcher.webApiUrl(doc);
         }
         return {
             content: documentationUrl,
@@ -85,6 +81,10 @@ class ApiSearcher {
             content: ApiSearcher.searchUrl(query),
             description: `Search AWS API reference docs for ${c.match(c.escape(query))}`,
         }];
+    }
+
+    static webApiUrl(doc) {
+        return `https://docs.aws.amazon.com/goto/WebAPI/${doc.service}-${doc.serviceVersion}/${doc.operation}`
     }
 
     static searchUrl(query) {

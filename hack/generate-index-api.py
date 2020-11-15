@@ -19,41 +19,15 @@ class ServiceOperation:
 @dataclass
 class ServiceIndex:
     name: str
+    version: str
     alternative_names: list[str]
     operations: list[ServiceOperation]
-    documentation_base_url: Optional[str]
 
     def final_index(self) -> tuple[list[str], Optional[str], dict[str, tuple[Optional[str], Optional[str]]]]:
         operation_index = {}
         for operation in self.operations:
             operation_index[operation.name] = (operation.summary, operation.documentation_url)
-        return self.alternative_names, self.documentation_base_url, operation_index
-
-
-class DocumentationUrlDetectorHTMLParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.detected_urls = Counter()
-
-    def handle_starttag(self, tag, attrs):
-        if tag != "a":
-            return
-        for (attr, value) in attrs:
-            if attr == "href":
-                href: str = value
-                break
-        else:
-            return
-        if not href.startswith("https://docs.aws.amazon.com"):
-            return
-        detected_url = href.rsplit("/", maxsplit=1)[0] + "/"
-        self.detected_urls[detected_url] += 1
-
-    def most_likely_documentation_url(self):
-        if len(self.detected_urls) == 0:
-            return None
-        (url, _count) = self.detected_urls.most_common(1)[0]
-        return url
+        return self.version, self.alternative_names, operation_index
 
 
 class SummarizationHTMLParser(HTMLParser):
@@ -107,12 +81,9 @@ def process_service(service_path: Path) -> Optional[ServiceIndex]:
     if "operations" not in service:
         return None
     operations = []
-    documentation_url_html_parser = DocumentationUrlDetectorHTMLParser()
     for operation_name, operation in service["operations"].items():
         documentation = operation.get("documentation", None)
         documentation_summary = summarize_documentation(documentation)
-        if documentation:
-            documentation_url_html_parser.feed(documentation)
         operations.append(ServiceOperation(
             name=operation_name,
             summary=documentation_summary,
@@ -132,9 +103,9 @@ def process_service(service_path: Path) -> Optional[ServiceIndex]:
 
     return ServiceIndex(
         name=service_name,
+        version=latest_api_version.name,
         alternative_names=alternative_names,
         operations=operations,
-        documentation_base_url=documentation_url_html_parser.most_likely_documentation_url(),
     )
 
 
