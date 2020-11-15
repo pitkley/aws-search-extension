@@ -28,7 +28,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: yamllint
-      uses: ibiqlik/action-yamllint@v1.0.0
+      uses: ibiqlik/action-yamllint@v3
 
   build-and-test:
     runs-on: ubuntu-latest
