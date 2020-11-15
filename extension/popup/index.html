@@ -4,8 +4,20 @@
     <style>
         body {
             overflow-x: hidden;
-            width: 350px;
-            height: 200px;
+            width: 450px;
+        }
+
+        header {
+            overflow: auto;
+        }
+
+        header img {
+            float: left;
+            width: 100px;
+        }
+
+        header h1 {
+            float: left;
         }
 
         table {
@@ -32,9 +44,13 @@
     </style>
 </head>
 <body>
-<h1>AWS search extensions</h1>
+<header>
+    <img src="../logo.png"/>
+    <h1>AWS search extension</h1>
+</header>
 <p>Provides search results for AWS API references and the AWS CloudFormation reference.</p>
-<p>You can use the following commands to search:</p>
+<h2>Supported queries</h2>
+<p>You can use the following search-queries:</p>
 <table>
     <thead>
     <tr>
@@ -50,6 +66,53 @@
     <tr>
         <td><code>/</code></td>
         <td>Search all API references</td>
+    </tr>
+    <tr>
+        <td><code>&lt;service&gt;/</code></td>
+        <td>Search the API references for the matching services.</td>
+    </tr>
+    </tbody>
+</table>
+<h2>Example queries</h2>
+<table>
+    <thead>
+    <tr>
+        <td>Query</td>
+        <td>Description</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><code>a::e::instance</code></td>
+        <td>Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case <code>AWS::EC2::Instance</code>
+            should be the top match.
+        </td>
+    </tr>
+    <tr>
+        <td><code>findinmap</code></td>
+        <td>Fuzzy-searches the AWS CloudFormation documentation, in this case the page explaining the intrinsic function
+            <code>Fn::FindInMap</code> should be the top match.
+        </td>
+    </tr>
+    <tr>
+        <td><code>/createmultipart</code></td>
+        <td>Searches the API operations of all services for ones that match <code>createmultipart</code>. The top result
+            should be the S3-API-operation <code>CreateMultipartUpload</code>, but it will also find e.g. the
+            Glacier-API-operation <code>InitiateMultipartUpload</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>lambda/invoke</code></td>
+        <td>Searches the AWS Lambda API for operations matching <code>invoke</code>, which will lead to the top result
+            being the <code>Invoke</code>-operation. Since <code>lambda</code> is an exact service-name match, it will
+            not find operations of other services with similar names.
+        </td>
+    </tr>
+    <tr>
+        <td><code>api/getapp</code></td>
+        <td>Searches API-operations matching <code>getapp</code> in all services matching <code>api</code>. Returns for
+            example the Amplify <code>GetApp</code> operation, and the Pinpoint <code>GetApp</code> operation.
+        </td>
     </tr>
     </tbody>
 </table>
