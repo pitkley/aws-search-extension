@@ -52,6 +52,8 @@ jobs:
     - run: npm install
     - name: 'Generate index: AWS CloudFormation'
       run: hack/generate-index-cfn.py
+    - name: 'Generate index: AWS API reference'
+      run: hack/generate-index-api.py
     - run: make firefox
     - name: web-ext build (Firefox)
       uses: kewisch/action-web-ext@v1

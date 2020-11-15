@@ -12,6 +12,7 @@ const commandManager = new CommandManager(
     new HistoryCommand(),
 );
 
+const apiSearcher = new ApiSearcher(apiSearchIndex);
 const cfnSearcher = new CfnSearcher(cfnSearchIndex);
 
 const defaultSuggestion = `A search-extension for quick, fuzzy-search results for AWS developers!`;
@@ -23,6 +24,33 @@ omnibox.bootstrap({
     onAppend: CfnSearcher.prototype.append.bind(cfnSearcher),
     afterNavigated: (query, result) => {
         HistoryCommand.record(query, result);
+    },
+});
+
+omnibox.addRegexQueryEvent(/^[^\/]+\//, {
+    onSearch: (query) => {
+        const separatorIndex = query.indexOf("/");
+        const serviceQueryOrName = query.slice(0, separatorIndex)
+        query = query.slice(separatorIndex + 1)
+        return apiSearcher.search(serviceQueryOrName, query);
+    },
+    onFormat: ApiSearcher.prototype.format.bind(apiSearcher),
+    onAppend: (query) => {
+        const separatorIndex = query.indexOf("/");
+        query = query.slice(separatorIndex + 1)
+        return apiSearcher.append(query);
+    },
+});
+
+omnibox.addPrefixQueryEvent("/", {
+    onSearch: (query) => {
+        query = query.replace("/", "").trim();
+        return apiSearcher.globalSearch(query);
+    },
+    onFormat: ApiSearcher.prototype.format.bind(apiSearcher),
+    onAppend: (query) => {
+        query = query.replace("/", "").trim();
+        return apiSearcher.append(query);
     },
 });
 

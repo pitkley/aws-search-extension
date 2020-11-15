@@ -12,10 +12,11 @@ local json = manifest.new(
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
              .addIcons(icons())
+             .addBackgroundScripts(['utils.js'])
              .addBackgroundScripts(['vendored/fuzzy-search/FuzzySearch.js'])
              .addBackgroundScripts(utils.js_files('command', ['help']))
-             .addBackgroundScripts(utils.js_files('index', ['cfn']))
-             .addBackgroundScripts(utils.js_files('search', ['cfn']))
+             .addBackgroundScripts(utils.js_files('index', ['api', 'cfn']))
+             .addBackgroundScripts(utils.js_files('search', ['api', 'cfn']))
              .addBackgroundScripts(['main.js']);
 
 json
