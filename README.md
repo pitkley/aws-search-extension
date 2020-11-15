@@ -70,11 +70,11 @@ aws-search-extension is licensed under either of
 
 at your option.
 
-## Attribution
-
-This repository and the extension have no official affiliation with Amazon Web Services, Inc., Amazon.com, Inc., or any of its affiliates.
-Amazon Web Services is a trademark of Amazon.com, Inc. or its affiliates in the United States and/or other countries.
-
 ### <a name="license-contribution"></a> Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in aws-search-extension by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+
+## Affiliation
+
+This repository and the extension have no official affiliation with Amazon Web Services, Inc., Amazon.com, Inc., or any of its affiliates.
+Amazon Web Services is a trademark of Amazon.com, Inc. or its affiliates in the United States and/or other countries.
