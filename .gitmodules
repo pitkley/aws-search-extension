@@ -4,3 +4,6 @@
 [submodule "index-sources/aws-cloudformation-user-guide"]
 	path = index-sources/aws-cloudformation-user-guide
 	url = https://github.com/awsdocs/aws-cloudformation-user-guide.git
+[submodule "index-sources/botocore"]
+	path = index-sources/botocore
+	url = https://github.com/boto/botocore.git
