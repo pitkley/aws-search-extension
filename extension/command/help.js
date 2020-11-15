@@ -12,11 +12,13 @@ class HelpCommand extends Command {
     }
 
     onExecute(_arg) {
-        const value = ([
-            `Prefix ${c.match(":")} to execute command (:history, etc.)`,
-        ]);
-        return value.map((description, index) => {
-            return {content: `${index + 1}`, description};
+        const helpValues = [
+            [":", `Use prefix ${c.match(":")} to execute a command (:history, etc.)`],
+            ["/", `Use prefix ${c.match("/")} to search for AWS API operations`],
+            ["<service>/", `Use prefix ${c.match(c.escape("<service>/"))} to search for service-specific API operations`],
+        ];
+        return helpValues.map(([content, description]) => {
+            return {content, description};
         });
     }
 }

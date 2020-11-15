@@ -67,10 +67,12 @@ class ApiSearcher {
 
     format(index, doc) {
         let documentationUrl = doc.documentationUrl;
-        if (!documentationUrl && doc.documentationBaseUrl) {
-            documentationUrl = `${doc.documentationBaseUrl}API_${doc.operation}.html`;
-        } else {
-            documentationUrl = ApiSearcher.searchUrl(`${doc.service} ${doc.operation}`);
+        if (!documentationUrl) {
+            if (doc.documentationBaseUrl) {
+                documentationUrl = `${doc.documentationBaseUrl}API_${doc.operation}.html`;
+            } else {
+                documentationUrl = ApiSearcher.searchUrl(`${doc.service} ${doc.operation}`);
+            }
         }
         return {
             content: documentationUrl,
