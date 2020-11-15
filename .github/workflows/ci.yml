@@ -64,12 +64,6 @@ jobs:
         cmd: build
         source: extension
         artifacts: web-ext-artifacts/firefox/
-    - name: 'Firefox: upload artifact to workflow'
-      uses: actions/upload-artifact@v2
-      with:
-        name: aws-search-extension-firefox.zip
-        path: |
-          ${{ steps.web-ext-build-firefox.outputs.target }}
 
     - name: 'Chrome: prepare manifest'
       run: make chrome
@@ -80,12 +74,6 @@ jobs:
         cmd: build
         source: extension
         artifacts: web-ext-artifacts/chrome/
-    - name: 'Chrome: upload artifact to workflow'
-      uses: actions/upload-artifact@v2
-      with:
-        name: aws-search-extension-chrome.zip
-        path: |
-          ${{ steps.web-ext-build-chrome.outputs.target }}
 
     - name: 'Edge: prepare manifest'
       run: make edge
@@ -96,9 +84,12 @@ jobs:
         cmd: build
         source: extension
         artifacts: web-ext-artifacts/edge/
-    - name: 'Edge: upload artifact to workflow'
+
+    - name: Upload extension-ZIPs as artifact to workflow
       uses: actions/upload-artifact@v2
       with:
-        name: aws-search-extension-edge.zip
+        name: aws-search-extension
         path: |
+          ${{ steps.web-ext-build-firefox.outputs.target }}
+          ${{ steps.web-ext-build-chrome.outputs.target }}
           ${{ steps.web-ext-build-edge.outputs.target }}
