@@ -80,8 +80,8 @@ def main(cfn_docs_root: Path):
 
     # Persist the final-index to the extension
     index_file = Path("extension/index/cfn.js")
-    index_file.parent.mkdir()
-    with open(index_file, "w") as fh:
+    index_file.parent.mkdir(exist_ok=True)
+    with index_file.open("w") as fh:
         fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
         fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
         fh.write("var cfnSearchIndex=")
