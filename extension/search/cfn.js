@@ -14,14 +14,7 @@ class CfnSearcher {
                 path,
                 description,
             };
-        }).sort(({name: aName}, {name: bName}) => {
-            // We sort results by length first, lexicographically second.
-            if (aName.length !== bName.length) {
-                return aName.length - bName.length;
-            } else {
-                return aName.localeCompare(bName);
-            }
-        });
+        }).sort(({name: a}, {name: b}) => lengthThenLexicographicSort(a, b));
         this.searcher = new FuzzySearch(
             this.index,
             ["name", "description"],
