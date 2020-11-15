@@ -5,9 +5,12 @@ local icons() = {
   for size in ['16', '48', '128']
 };
 
+local packageJsonStr = importstr 'package.json';
+local packageJson = std.parseJson(packageJsonStr);
+
 local json = manifest.new(
   name='AWS Search Extension',
-  version='0.1.1',
+  version=packageJson.version,
   keyword='aws',
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
