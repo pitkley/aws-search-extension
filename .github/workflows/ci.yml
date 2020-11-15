@@ -54,15 +54,51 @@ jobs:
       run: hack/generate-index-cfn.py
     - name: 'Generate index: AWS API reference'
       run: hack/generate-index-api.py
-    - run: make firefox
-    - name: web-ext build (Firefox)
+
+    - name: 'Firefox: prepare manifest'
+      run: make firefox
+    - name: 'Firefox: web-ext build'
       uses: kewisch/action-web-ext@v1
+      id: web-ext-build-firefox
       with:
         cmd: build
         source: extension
-    - run: make chrome
-    - name: web-ext build (Chrome)
+        artifacts: web-ext-artifacts/firefox/
+    - name: 'Firefox: upload artifact to workflow'
+      uses: actions/upload-artifact@v2
+      with:
+        name: aws-search-extension-firefox.zip
+        path: |
+          ${{ steps.web-ext-build-firefox.outputs.target }}
+
+    - name: 'Chrome: prepare manifest'
+      run: make chrome
+    - name: 'Chrome: web-ext build'
       uses: kewisch/action-web-ext@v1
+      id: web-ext-build-chrome
       with:
         cmd: build
         source: extension
+        artifacts: web-ext-artifacts/chrome/
+    - name: 'Chrome: upload artifact to workflow'
+      uses: actions/upload-artifact@v2
+      with:
+        name: aws-search-extension-chrome.zip
+        path: |
+          ${{ steps.web-ext-build-chrome.outputs.target }}
+
+    - name: 'Edge: prepare manifest'
+      run: make edge
+    - name: 'Edge: web-ext build'
+      uses: kewisch/action-web-ext@v1
+      id: web-ext-build-edge
+      with:
+        cmd: build
+        source: extension
+        artifacts: web-ext-artifacts/edge/
+    - name: 'Edge: upload artifact to workflow'
+      uses: actions/upload-artifact@v2
+      with:
+        name: aws-search-extension-edge.zip
+        path: |
+          ${{ steps.web-ext-build-edge.outputs.target }}

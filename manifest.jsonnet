@@ -7,7 +7,7 @@ local icons() = {
 
 local json = manifest.new(
   name='AWS Search Extension',
-  version='0.1.0',
+  version='0.1.1',
   keyword='aws',
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
