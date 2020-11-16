@@ -6,11 +6,11 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
-class ApiSearcher {
+class ApiSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
         const globalOperationIndex = [];
         const serviceSearchIndex = [];
-        this.services = {};
+        const services = {};
         Object.entries(rawIndex).map(([serviceName, [serviceVersion, alternativeNames, serviceIndex]]) => {
             const operationEntries = Object.entries(serviceIndex).map(([operationName, [summary, documentationUrl]]) => ({
                 service: serviceName,
@@ -21,7 +21,7 @@ class ApiSearcher {
             })).sort(({operation: a}, {operation: b}) => lengthThenLexicographicSort(a, b));
 
             // Create per-service searcher
-            this.services[serviceName] = new FuzzySearch(
+            services[serviceName] = new FuzzySearch(
                 operationEntries,
                 ["operation", "summary"],
                 {sort: true},
@@ -33,61 +33,28 @@ class ApiSearcher {
             for (const alternativeName of alternativeNames) {
                 serviceSearchIndex.push({alternativeName, serviceName});
             }
-
         });
-        this.globalSearcher = new FuzzySearch(
+        const globalSearcher = new FuzzySearch(
             globalOperationIndex,
             ["service", "operation", "summary"],
             {sort: true},
         );
-        this.serviceSearcher = new FuzzySearch(
+        const serviceSearcher = new FuzzySearch(
             serviceSearchIndex,
             ["alternativeName", "serviceName"],
             {sort: true},
         );
+
+        super("AWS API reference docs", services, globalSearcher, serviceSearcher);
     }
 
-    globalSearch(query) {
-        return this.globalSearcher.search(query);
-    }
-
-    search(serviceQueryOrName, query) {
-        if (serviceQueryOrName in this.services) {
-            return this.services[serviceQueryOrName].search(query);
-        } else {
-            const serviceCandidates = this.serviceSearcher.search(serviceQueryOrName);
-            if (!serviceCandidates) {
-                return [];
-            }
-            return [...new Set(serviceCandidates.map(({serviceName}) => serviceName))].flatMap((serviceName) => {
-                return this.services[serviceName].search(query);
-            }).sort(({operation: a}, {operation: b}) => lengthThenLexicographicSort(a, b));
-        }
-    }
-
-    format(index, doc) {
-        let documentationUrl = doc.documentationUrl;
-        if (!documentationUrl) {
-            documentationUrl = ApiSearcher.webApiUrl(doc);
-        }
-        return {
-            content: documentationUrl,
-            description: `[${c.match(c.escape(doc.service))}] ${c.match(c.escape(doc.operation))} - ${c.dim(c.escape(doc.summary))}`,
-        };
-    }
-
-    append(query) {
-        return [{
-            content: ApiSearcher.searchUrl(query),
-            description: `Search AWS API reference docs for ${c.match(c.escape(query))}`,
-        }];
-    }
-
-    static webApiUrl(doc) {
+    documentationUrl(doc) {
+        if (doc.documentationUrl)
+            return doc.documentationUrl;
         return `https://docs.aws.amazon.com/goto/WebAPI/${doc.service}-${doc.serviceVersion}/${doc.operation}`
     }
 
-    static searchUrl(query) {
+    searchUrl(query) {
         return `https://docs.aws.amazon.com/search/doc-search.html?searchPath=documentation-guide&searchQuery=${query}&this_doc_guide=API%20Reference#facet_doc_guide=API%20Reference`;
     }
 }

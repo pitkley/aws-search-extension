@@ -18,6 +18,7 @@ local json = manifest.new(
              .addBackgroundScripts(['utils.js'])
              .addBackgroundScripts(['vendored/fuzzy-search/FuzzySearch.js'])
              .addBackgroundScripts(utils.js_files('command', ['help']))
+             .addBackgroundScripts(utils.js_files('search', ['lib']))
              .addBackgroundScripts(utils.js_files('index', ['api', 'cfn']))
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn']))
              .addBackgroundScripts(['main.js']);
