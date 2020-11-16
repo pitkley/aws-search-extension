@@ -44,12 +44,12 @@ omnibox.addRegexQueryEvent(/^[^\/]+\//, {
 
 omnibox.addPrefixQueryEvent("/", {
     onSearch: (query) => {
-        query = query.replace("/", "").trim();
+        query = query.substring(1).trim();
         return apiSearcher.globalSearch(query);
     },
     onFormat: ApiSearcher.prototype.format.bind(apiSearcher),
     onAppend: (query) => {
-        query = query.replace("/", "").trim();
+        query = query.substring(1).trim();
         return apiSearcher.append(query);
     },
 });
