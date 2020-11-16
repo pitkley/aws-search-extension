@@ -1,5 +1,13 @@
 #!/usr/bin/env python3.9
 
+# Copyright Pit Kleyersburg <pitkley@googlemail.com>
+#
+# Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+# http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+# <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+# option. This file may not be copied, modified or distributed
+# except according to those terms.
+
 import json
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -123,7 +131,7 @@ def main(botocore_data_root: Path):
         fh.write("// Content retrieved from: https://github.com/boto/botocore/\n")
         fh.write("// It is licensed under Apache-2.0, copyright Amazon.com, Inc. or its affiliates.\n")
         fh.write("var apiSearchIndex={\n")
-        for service_name, service in services.items():
+        for service_name, service in sorted(services.items()):
             fh.write(f"  \"{service_name}\":")
             json.dump(service.final_index(), fh)
             fh.write(",\n")
