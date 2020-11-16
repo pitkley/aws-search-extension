@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 node_modules/
+.venv/
 extension/manifest.json
 extension/index/
 extension/vendored/

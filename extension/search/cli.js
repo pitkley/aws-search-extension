@@ -6,18 +6,16 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
-class ApiSearcher extends ServiceOrGlobalOperationSearcher {
+class CliSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
         const globalOperationIndex = [];
         const serviceSearchIndex = [];
         const services = {};
-        Object.entries(rawIndex).map(([serviceName, [serviceVersion, alternativeNames, serviceIndex]]) => {
-            const operationEntries = Object.entries(serviceIndex).map(([operationName, [summary, documentationUrl]]) => ({
+        Object.entries(rawIndex).map(([serviceName, operations]) => {
+            const operationEntries = Object.entries(operations).map(([operationName, summary]) => ({
                 service: serviceName,
-                serviceVersion,
                 operation: operationName,
                 summary,
-                documentationUrl,
             })).sort(({operation: a}, {operation: b}) => lengthThenLexicographicSort(a, b));
 
             // Create per-service searcher
@@ -29,10 +27,8 @@ class ApiSearcher extends ServiceOrGlobalOperationSearcher {
             // Add per-service operations to global operation index
             globalOperationIndex.push(...operationEntries);
 
-            // Add alternative service names to service-search
-            for (const alternativeName of alternativeNames) {
-                serviceSearchIndex.push({alternativeName, serviceName});
-            }
+            // Add service-name to service-search index
+            serviceSearchIndex.push({serviceName})
         });
         const globalSearcher = new FuzzySearch(
             globalOperationIndex,
@@ -41,20 +37,19 @@ class ApiSearcher extends ServiceOrGlobalOperationSearcher {
         );
         const serviceSearcher = new FuzzySearch(
             serviceSearchIndex,
-            ["alternativeName", "serviceName"],
+            ["serviceName"],
             {sort: true},
         );
 
-        super("AWS API reference docs", services, globalSearcher, serviceSearcher);
+        super("AWS CLI reference docs", services, globalSearcher, serviceSearcher);
     }
 
     documentationUrl(doc) {
-        if (doc.documentationUrl)
-            return doc.documentationUrl;
-        return `https://docs.aws.amazon.com/goto/WebAPI/${doc.service}-${doc.serviceVersion}/${doc.operation}`
+        const stem = doc.operation.replace(" ", "/")
+        return `https://docs.aws.amazon.com/cli/latest/reference/${doc.service}/${stem}.html`
     }
 
     searchUrl(query) {
-        return `https://docs.aws.amazon.com/search/doc-search.html?searchPath=documentation-guide&searchQuery=${query}&this_doc_guide=API%20Reference#facet_doc_guide=API%20Reference`;
+        return `https://docs.aws.amazon.com/cli/latest/search.html?q=${query}&check_keywords=yes&area=default`
     }
 }

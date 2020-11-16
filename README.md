@@ -23,11 +23,13 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix        | Description                                          |
-| ------------- | ---------------------------------------------------- |
-| *(no prefix)* | Search the AWS CloudFormation documentation          |
-| `/`           | Search all API references                            |
-| `<service>/`  | Search the API references for the matching services. |
+| Prefix        | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| *(no prefix)* | Search the AWS CloudFormation documentation              |
+| `/`           | Search all API references                                |
+| `<service>/`  | Search the API references for the matching services.     |
+| `@`           | Search all aws-cli references                            |
+| `<service>@`  | Search the aws-cli references for the matching services. |
 
 ### Example queries
 
@@ -60,6 +62,41 @@ You can use the following kinds of search-queries:
     Searches API-operations matching `getapp` in all services matching `api`.
     
     ![Example suggestions for query `api/getapp`](docs/api-api-getapp.png)
+
+* `@get-cal`
+
+    Searches all CLI-operations matching `get-cal`.
+    
+    ![Example suggestions for query `@get-cal`](docs/cli-getcal.png)
+   
+* `elbv2@wait`
+
+    Searches the AWS Elastic Load Balancing v2 CLI-operations matching `wait`.
+    
+    ![Example suggestions for query `elbv2@wait`](docs/cli-elbv2-wait.png)
+ 
+ * `data@job`
+ 
+    Searches CLI-operations matching `job` in all services matching `data`.
+    
+    ![Example suggestions for query `data@job`](docs/cli-data-job.png)
+
+## FAQ
+
+* *How are the results computed so fast?*
+
+    The extension uses pre-built indices to support a fast search.
+    The indices contain just enough data to be useful to the users (it contains summaries for all results), but not too much to slow down the search.
+
+* *How are the indices update?*
+
+    Currently, the indices are bundled directly with the extension.
+    While this has the significant advantage that no network-requests have to be made at all, it can lead to outdated indices.
+    
+    The current plan is twofold:
+    
+    * Perform relatively frequent releases that contain updated indices.
+    * Support automatic index updates in the future. (This will most likely be an opt-in feature to ensure no unexpected network-requests are made by the extension.)
 
 ## <a name="license"></a> License
 

@@ -53,11 +53,38 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Get aws-cli submodule commit hash
+      id: submodule-awscli-hash
+      run: |
+        hash="$(git rev-parse @:index-sources/aws-cli)"
+        echo "::set-output name=hash::${hash}"
+    - name: aws-cli docs cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          index-sources/aws-cli/doc/build/
+        key: awscli-docbuild-${{ steps.submodule-awscli-hash.outputs.hash }}
+
+    - name: Check if up-to-date built aws-cli docs are available
+      id: awscli-docs-available
+      continue-on-error: true
+      run: stat index-sources/aws-cli/doc/build/json
+    - name: Build aws-cli docs
+      if: "${{ (steps.awscli-docs-available.outcome == 'failure') }}"
+      working-directory: index-sources/aws-cli/
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-docs.txt
+        pip install -e .
+        make -C doc json
+
     - run: npm install
     - name: 'Generate index: AWS CloudFormation'
       run: hack/generate-index-cfn.py
     - name: 'Generate index: AWS API reference'
       run: hack/generate-index-api.py
+    - name: 'Generate index: AWS CLI reference'
+      run: hack/generate-index-cli.py
 
     - name: 'Firefox: prepare manifest'
       run: make firefox

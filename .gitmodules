@@ -7,3 +7,6 @@
 [submodule "index-sources/botocore"]
 	path = index-sources/botocore
 	url = https://github.com/boto/botocore.git
+[submodule "index-sources/aws-cli"]
+	path = index-sources/aws-cli
+	url = https://github.com/aws/aws-cli

@@ -8,7 +8,7 @@
 
 # We check if the file starts with "// Copyright". If it doesn't, it is
 # classified as an error.
-PATTERN=$'^// Copyright'
+PATTERN=$'(^//|#) Copyright'
 ERRORS=()
 
 while IFS= read -r f; do
@@ -17,6 +17,7 @@ while IFS= read -r f; do
     fi
 done < <(git ls-files -- \
 '*.js' \
+'*.py' \
 ':!:extension/index/*.js' \
 )
 
