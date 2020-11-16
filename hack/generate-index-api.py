@@ -1,7 +1,6 @@
 #!/usr/bin/env python3.9
 
 import json
-from collections import Counter
 from dataclasses import dataclass
 from enum import Enum, auto
 from html.parser import HTMLParser
@@ -23,7 +22,7 @@ class ServiceIndex:
     alternative_names: list[str]
     operations: list[ServiceOperation]
 
-    def final_index(self) -> tuple[list[str], Optional[str], dict[str, tuple[Optional[str], Optional[str]]]]:
+    def final_index(self) -> tuple[str, list[str], dict[str, tuple[Optional[str], Optional[str]]]]:
         operation_index = {}
         for operation in self.operations:
             operation_index[operation.name] = (operation.summary, operation.documentation_url)
