@@ -8,3 +8,7 @@ updates:
   directory: /assets/
   schedule:
     interval: daily
+- package-ecosystem: gitsubmodule
+  directory: /
+  schedule:
+    interal: daily
