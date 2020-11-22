@@ -6,6 +6,7 @@ on:
     - main
     - staging
     - trying
+    - 'renovate/*'
   pull_request:
     branches:
     - main
