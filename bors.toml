@@ -1,0 +1,5 @@
+status = [
+    "build-and-test",
+    "check-license-headers",
+    "yamllint",
+]
