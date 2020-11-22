@@ -71,21 +71,21 @@ jobs:
         path: |
           index-sources/aws-cli/doc/build/
           extension/index/cli.js
-        key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}
+        key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}-${{ hashFiles('hack/generate-index-cli.py') }}
     - name: 'aws-cloudformation-user-guide: index cache'
       id: cache-awscloudformationuserguide
       uses: actions/cache@v2
       with:
         path: |
           extension/index/cfn.js
-        key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}
+        key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
       uses: actions/cache@v2
       with:
         path: |
           extension/index/api.js
-        key: indices-botocore-${{ steps.submodule-hashes.outputs.botocore-hash }}
+        key: indices-botocore-${{ steps.submodule-hashes.outputs.botocore-hash }}-${{ hashFiles('hack/generate-index-api.py') }}
 
     - name: 'aws-cli: Build aws-cli docs'
       if: steps.cache-awscli.outputs.cache-hit != 'true'
