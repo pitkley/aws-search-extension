@@ -9,9 +9,7 @@
     {
       "managers": ["git-submodules"],
       "automerge": true,
-      "automergeType": "pr-comment",
-      "automergeComment": "bors r+",
-      "requiredStatusChecks": null,
+      "automergeType": "branch",
     },
   ],
 }
