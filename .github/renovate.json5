@@ -11,6 +11,7 @@
       "automerge": true,
       "automergeType": "pr-comment",
       "automergeComment": "bors r+",
+      "requiredStatusChecks": null,
     },
   ],
 }
