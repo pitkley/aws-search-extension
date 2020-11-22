@@ -1,0 +1,16 @@
+{
+  "enabledManagers": [
+    "git-submodules",
+  ],
+  "git-submodules": {
+    "enabled": true,
+  },
+  "packageRules": [
+    {
+      "managers": ["git-submodules"],
+      "automerge": true,
+      "automergeType": "pr-comment",
+      "automergeComment": "bors r+",
+    },
+  ],
+}
