@@ -93,7 +93,7 @@ def main(cfn_docs_root: Path):
         fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
         fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
         fh.write("var cfnSearchIndex=")
-        json.dump(final_index, fh)
+        json.dump(sorted(final_index), fh, sort_keys=True)
         fh.write(";\n")
 
 
