@@ -133,7 +133,7 @@ def main(botocore_data_root: Path):
         fh.write("var apiSearchIndex={\n")
         for service_name, service in sorted(services.items()):
             fh.write(f"  \"{service_name}\":")
-            json.dump(service.final_index(), fh)
+            json.dump(service.final_index(), fh, sort_keys=True)
             fh.write(",\n")
         fh.write("};")
 
