@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "vendor-copy": "^2.0.0",
-    "web-ext": "^5.4.0"
+    "web-ext": "^5.4.1"
   },
   "scripts": {
     "postinstall": "vendor-copy",
