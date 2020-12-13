@@ -34,6 +34,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    outputs:
+      awscli-hash: ${{ steps.submodule-hashes.outputs.awscli-hash }}
+      awscloudformationuserguide-hash: ${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}
+      botocore-hash: ${{ steps.submodule-hashes.outputs.botocore-hash }}
+
     steps:
     - name: Install node toolchain
       uses: actions/setup-node@v1
@@ -175,6 +180,8 @@ jobs:
           local file="$1"
           local subject="$2"
           local message="$3"
+          local echo_commit="$4"
+          local echo_nocommit="$5"
           local status=0
           git add "$file"
           git \
@@ -185,16 +192,15 @@ jobs:
               --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
               --message "$subject" \
               --message "$message" \
-            || status=$?
+            2>/dev/null || status=$?
 
           case "$status" in
           0)
-              return 0
+              echo "$echo_commit"
               ;;
           1)
               # Couldn't create a commit because it would have been empty.
-              echo "⚠️ No commit required"
-              return 1
+              echo "$echo_nocommit"
               ;;
           *)
               echo "An unknown error has occurred, exitting!"
@@ -206,19 +212,25 @@ jobs:
         git_commit \
           "cli.js" \
           "⌨️ cli: index updated" \
-          "Based on aws/aws-cli#${{ steps.submodule-hashes.outputs.awscli-hash }}" \
-          || echo "⌨️ cli: no update needed, not committing"
+          "Based on aws/aws-cli#${{ needs.build-and-test.outputs.awscli-hash }}" \
+          "⌨️ cli: created commit" \
+          "⌨️ cli: no update needed, not committing" \
+          ;
 
         git_commit \
           "cfn.js" \
           "☁️ cfn: index updated" \
-          "Based on awsdocs/aws-cloudformation-user-guide#${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}" \
-          || echo "☁️ cfn: no update needed, not committing"
+          "Based on awsdocs/aws-cloudformation-user-guide#${{ needs.build-and-test.outputs.awscloudformationuserguide-hash }}" \
+          "☁️ cfn: created commit" \
+          "☁️ cfn: no update needed, not committing" \
+          ;
 
         git_commit \
           "api.js" \
           "📄 api: index updated" \
-          "Based on boto/botocore#${{ steps.submodule-hashes.outputs.botocore-hash }}" \
-          || echo "📄 api: no update needed, not committing"
+          "Based on boto/botocore#${{ needs.build-and-test.outputs.botocore-hash }}" \
+          "📄 api: created commit" \
+          "📄 api: no update needed, not committing" \
+          ;
 
         git push
