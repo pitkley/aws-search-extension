@@ -41,7 +41,7 @@ jobs:
 
     steps:
     - name: Install node toolchain
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2.1.4
       with:
         node-version: '12'
     - name: Install Python
