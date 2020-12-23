@@ -7,11 +7,31 @@
 // except according to those terms.
 
 class ServiceOrGlobalOperationSearcher {
-    constructor(name, services, globalSearcher, serviceSearcher) {
+    constructor(name, indexId, services, globalSearcher, serviceSearcher) {
         this.name = name;
+        this.indexId = indexId;
+        this.updateSearcher(services, globalSearcher, serviceSearcher);
+    }
+
+    updateSearcher(services, globalSearcher, serviceSearcher) {
         this.services = services;
         this.globalSearcher = globalSearcher;
         this.serviceSearcher = serviceSearcher;
+    }
+
+    updateFromRawIndex(rawIndex) {
+    }
+
+    async updateIndexFromGithub() {
+        // Retrieve pre-built JSON-index from GitHub.
+        const response = await fetch(CONSTANTS.INDEX.forIndexId(this.indexId));
+        const indexData = await response.json();
+
+        // Store the index in the extension-storage.
+        await browser.storage.local.set({[`index-${this.indexId}`]: indexData});
+
+        // Update the current searcher with the new index.
+        this.updateFromRawIndex(indexData);
     }
 
     globalSearch(query) {

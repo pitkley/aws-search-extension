@@ -5,7 +5,8 @@
   "author": "Pit Kleyersburg <pitkley@googlemail.com",
   "license": "Apache-2.0/MIT",
   "dependencies": {
-    "fuzzy-search": "^3.2.1"
+    "fuzzy-search": "^3.2.1",
+    "webextension-polyfill": "^0.7.0"
   },
   "devDependencies": {
     "vendor-copy": "^2.0.0",
@@ -22,6 +23,10 @@
     {
       "from": "node_modules/fuzzy-search/dist/FuzzySearch.js",
       "to": "extension/vendored/fuzzy-search/FuzzySearch.js"
+    },
+    {
+      "from": "node_modules/webextension-polyfill/dist/browser-polyfill.min.js",
+      "to": "extension/vendored/webextension-polyfill/browser-polyfill.min.js"
     }
   ]
 }

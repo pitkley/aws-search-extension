@@ -13,3 +13,7 @@ function lengthThenLexicographicSort(a, b) {
         return a.localeCompare(b);
     }
 }
+
+async function storageGetOrDefault(key, default_) {
+    return (await browser.storage.local.get(key))[key] || default_;
+}

@@ -8,6 +8,16 @@
 
 class CliSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
+        const {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        } = CliSearcher.processRawIndex(rawIndex);
+
+        super("AWS CLI reference docs", "cli", services, globalSearcher, serviceSearcher);
+    }
+
+    static processRawIndex(rawIndex) {
         const globalOperationIndex = [];
         const serviceSearchIndex = [];
         const services = {};
@@ -41,7 +51,20 @@ class CliSearcher extends ServiceOrGlobalOperationSearcher {
             {sort: true},
         );
 
-        super("AWS CLI reference docs", services, globalSearcher, serviceSearcher);
+        return {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        };
+    }
+
+    updateFromRawIndex(rawIndex) {
+        const {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        } = CliSearcher.processRawIndex(rawIndex);
+        this.updateSearcher(services, globalSearcher, serviceSearcher);
     }
 
     documentationUrl(doc) {
