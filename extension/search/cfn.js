@@ -8,18 +8,45 @@
 
 class CfnSearcher {
     constructor(rawIndex) {
-        this.index = Object.entries(rawIndex).map(([name, [path, description]]) => {
+        this.updateFromRawIndex(rawIndex);
+    }
+
+    static processRawIndex(rawIndex) {
+        const index = Object.entries(rawIndex).map(([name, [path, description]]) => {
             return {
                 name,
                 path,
                 description,
             };
         }).sort(({name: a}, {name: b}) => lengthThenLexicographicSort(a, b));
-        this.searcher = new FuzzySearch(
-            this.index,
+        const searcher = new FuzzySearch(
+            index,
             ["name", "description"],
             {sort: true},
         );
+
+        return {searcher};
+    }
+
+    updateSearcher(searcher) {
+        this.searcher = searcher;
+    }
+
+    updateFromRawIndex(rawIndex) {
+        const {searcher} = CfnSearcher.processRawIndex(rawIndex);
+        this.updateSearcher(searcher);
+    }
+
+    async updateIndexFromGithub() {
+        // Retrieve pre-built JSON-index from GitHub.
+        const response = await fetch(CONSTANTS.INDEX.forIndexId("cfn"));
+        const indexData = await response.json();
+
+        // Store the index in the extension-storage.
+        await browser.storage.local.set({"index-cfn": indexData});
+
+        // Update the current searcher with the new index.
+        this.updateFromRawIndex(indexData);
     }
 
     search(query) {

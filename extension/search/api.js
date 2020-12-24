@@ -8,6 +8,16 @@
 
 class ApiSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
+        const {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        } = ApiSearcher.processRawIndex(rawIndex);
+
+        super("AWS API reference docs", "api", services, globalSearcher, serviceSearcher);
+    }
+
+    static processRawIndex(rawIndex) {
         const globalOperationIndex = [];
         const serviceSearchIndex = [];
         const services = {};
@@ -45,7 +55,20 @@ class ApiSearcher extends ServiceOrGlobalOperationSearcher {
             {sort: true},
         );
 
-        super("AWS API reference docs", services, globalSearcher, serviceSearcher);
+        return {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        };
+    }
+
+    updateFromRawIndex(rawIndex) {
+        const {
+            services,
+            globalSearcher,
+            serviceSearcher,
+        } = ApiSearcher.processRawIndex(rawIndex);
+        this.updateSearcher(services, globalSearcher, serviceSearcher);
     }
 
     documentationUrl(doc) {
