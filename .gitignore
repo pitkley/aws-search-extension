@@ -6,5 +6,6 @@ node_modules/
 extension/manifest.json
 extension/index/
 extension/vendored/
+json-indicies/
 profiles/
 web-ext-artifacts/

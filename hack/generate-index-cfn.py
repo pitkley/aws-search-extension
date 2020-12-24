@@ -9,6 +9,7 @@
 # except according to those terms.
 
 import json
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -54,7 +55,11 @@ def process_path(path: Path) -> Optional[IndexItem]:
     return IndexItem(name=item, path=path, description=description)
 
 
-def main(cfn_docs_root: Path):
+def main(
+    cfn_docs_root: Path,
+    *,
+    export_as_json: bool,
+):
     # Generate the internal index representation for the available files
     index = defaultdict(list)
     for path in cfn_docs_root.iterdir():
@@ -87,15 +92,21 @@ def main(cfn_docs_root: Path):
                 ]
 
     # Persist the final-index to the extension
-    index_file = Path("extension/index/cfn.js")
+    index_file = Path("json-indices/cfn.json") if export_as_json else Path("extension/index/cfn.js")
     index_file.parent.mkdir(exist_ok=True)
     with index_file.open("w") as fh:
-        fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
-        fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
-        fh.write("var cfnSearchIndex=")
+        if not export_as_json:
+            fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
+            fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
+            fh.write("var cfnSearchIndex=")
         json.dump(final_index, fh, sort_keys=True)
-        fh.write(";\n")
+        if not export_as_json:
+            fh.write(";\n")
 
 
 if __name__ == '__main__':
-    main(Path("index-sources/aws-cloudformation-user-guide/doc_source"))
+    export_as_json = "--export-as-json" in sys.argv
+    main(
+        Path("index-sources/aws-cloudformation-user-guide/doc_source"),
+        export_as_json=export_as_json,
+    )

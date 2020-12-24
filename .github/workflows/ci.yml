@@ -76,6 +76,7 @@ jobs:
         path: |
           index-sources/aws-cli/doc/build/
           extension/index/cli.js
+          json-indices/cli.json
         key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}-${{ hashFiles('hack/generate-index-cli.py') }}
     - name: 'aws-cloudformation-user-guide: index cache'
       id: cache-awscloudformationuserguide
@@ -83,6 +84,7 @@ jobs:
       with:
         path: |
           extension/index/cfn.js
+          json-indices/cfn.js
         key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
@@ -90,6 +92,7 @@ jobs:
       with:
         path: |
           extension/index/api.js
+          json-indices/api.json
         key: indices-botocore-${{ steps.submodule-hashes.outputs.botocore-hash }}-${{ hashFiles('hack/generate-index-api.py') }}
 
     - name: 'aws-cli: Build aws-cli docs'
@@ -102,15 +105,21 @@ jobs:
         make -C doc json
     - name: 'aws-cli: Generate index'
       if: steps.cache-awscli.outputs.cache-hit != 'true'
-      run: hack/generate-index-cli.py
+      run: |
+        hack/generate-index-cli.py
+        hack/generate-index-cli.py --export-as-json
 
     - name: 'aws-cloudformation-user-guide: Generate index'
       if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
-      run: hack/generate-index-cfn.py
+      run: |
+        hack/generate-index-cfn.py
+        hack/generate-index-cfn.py --export-as-json
 
     - name: 'botocore: Generate index'
       if: steps.cache-botocore.outputs.cache-hit != 'true'
-      run: hack/generate-index-api.py
+      run: |
+        hack/generate-index-api.py
+        hack/generate-index-api.py --export-as-json
 
     - run: npm install
 
@@ -152,12 +161,12 @@ jobs:
           ${{ steps.web-ext-build-firefox.outputs.target }}
           ${{ steps.web-ext-build-chrome.outputs.target }}
           ${{ steps.web-ext-build-edge.outputs.target }}
-    - name: Upload indices as artifact to workflow
+    - name: Upload JSON-indices as artifact to workflow
       uses: actions/upload-artifact@v2
       with:
         name: indices
         path: |
-          extension/index/*.js
+          json-indices/*.json
 
   commit-indices:
     runs-on: ubuntu-latest
@@ -210,7 +219,7 @@ jobs:
         }
 
         git_commit \
-          "cli.js" \
+          "cli.json" \
           "⌨️ cli: index updated" \
           "Based on aws/aws-cli#${{ needs.build-and-test.outputs.awscli-hash }}" \
           "⌨️ cli: created commit" \
@@ -218,7 +227,7 @@ jobs:
           ;
 
         git_commit \
-          "cfn.js" \
+          "cfn.json" \
           "☁️ cfn: index updated" \
           "Based on awsdocs/aws-cloudformation-user-guide#${{ needs.build-and-test.outputs.awscloudformationuserguide-hash }}" \
           "☁️ cfn: created commit" \
@@ -226,7 +235,7 @@ jobs:
           ;
 
         git_commit \
-          "api.js" \
+          "api.json" \
           "📄 api: index updated" \
           "Based on boto/botocore#${{ needs.build-and-test.outputs.botocore-hash }}" \
           "📄 api: created commit" \

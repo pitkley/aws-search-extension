@@ -9,6 +9,7 @@
 # except according to those terms.
 
 import json
+import sys
 from dataclasses import dataclass
 from enum import Enum, auto
 from html.parser import HTMLParser
@@ -116,7 +117,11 @@ def process_service(service_path: Path) -> Optional[ServiceIndex]:
     )
 
 
-def main(botocore_data_root: Path):
+def main(
+    botocore_data_root: Path,
+    *,
+    export_as_json: bool,
+):
     services = {}
     for service_path in botocore_data_root.iterdir():
         if not service_path.is_dir():
@@ -125,18 +130,32 @@ def main(botocore_data_root: Path):
         services[service_index.name] = service_index
 
     # Persist the final-index to the extension
-    index_file = Path("extension/index/api.js")
+    index_file = Path("json-indices/api.json") if export_as_json else Path("extension/index/api.js")
     index_file.parent.mkdir(exist_ok=True)
     with index_file.open("w") as fh:
-        fh.write("// Content retrieved from: https://github.com/boto/botocore/\n")
-        fh.write("// It is licensed under Apache-2.0, copyright Amazon.com, Inc. or its affiliates.\n")
-        fh.write("var apiSearchIndex={\n")
-        for service_name, service in sorted(services.items()):
+        if not export_as_json:
+            fh.write("// Content retrieved from: https://github.com/boto/botocore/\n")
+            fh.write("// It is licensed under Apache-2.0, copyright Amazon.com, Inc. or its affiliates.\n")
+            fh.write("var apiSearchIndex={\n")
+        else:
+            fh.write("{\n")
+
+        service_count = len(services.keys())
+        for index, (service_name, service) in enumerate(sorted(services.items()), start=1):
             fh.write(f"  \"{service_name}\":")
             json.dump(service.final_index(), fh, sort_keys=True)
-            fh.write(",\n")
-        fh.write("};")
+            if not export_as_json or index != service_count:
+                fh.write(",")
+            fh.write("\n")
+
+        fh.write("}")
+        if not export_as_json:
+            fh.write(";")
 
 
 if __name__ == '__main__':
-    main(Path("index-sources/botocore/botocore/data/"))
+    export_as_json = "--export-as-json" in sys.argv
+    main(
+        Path("index-sources/botocore/botocore/data/"),
+        export_as_json=export_as_json,
+    )
