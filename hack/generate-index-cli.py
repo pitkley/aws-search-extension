@@ -106,7 +106,11 @@ def process_service(service_path: Path) -> ServiceIndex:
     )
 
 
-def main(awscli_docs_root: Path):
+def main(
+    awscli_docs_root: Path,
+    *,
+    export_as_json: bool,
+):
     if not awscli_docs_root.is_dir():
         print("The aws-cli documentation directory does not exist. Have you built the docs?", file=sys.stderr)
         print("  cd index-sources/aws-cli/", file=sys.stderr)
@@ -126,18 +130,32 @@ def main(awscli_docs_root: Path):
         services[service_index.name] = service_index
 
     # Persist the final-index to the extension
-    index_file = Path("extension/index/cli.js")
+    index_file = Path("json-indices/cli.json") if export_as_json else Path("extension/index/cli.js")
     index_file.parent.mkdir(exist_ok=True)
     with index_file.open("w") as fh:
-        fh.write("// Content retrieved from: https://github.com/aws/aws-cli/\n")
-        fh.write("// It is licensed under Apache-2.0, copyright Amazon.com, Inc. or its affiliates.\n")
-        fh.write("var cliSearchIndex={\n")
-        for service_name, service in sorted(services.items()):
+        if not export_as_json:
+            fh.write("// Content retrieved from: https://github.com/aws/aws-cli/\n")
+            fh.write("// It is licensed under Apache-2.0, copyright Amazon.com, Inc. or its affiliates.\n")
+            fh.write("var cliSearchIndex={\n")
+        else:
+            fh.write("{\n")
+
+        service_count = len(services.keys())
+        for index, (service_name, service) in enumerate(sorted(services.items()), start=1):
             fh.write(f"  \"{service_name}\":")
             json.dump(service.final_index(), fh, sort_keys=True)
-            fh.write(",\n")
-        fh.write("};")
+            if not export_as_json or index != service_count:
+                fh.write(",")
+            fh.write("\n")
+
+        fh.write("}")
+        if not export_as_json:
+            fh.write(";")
 
 
 if __name__ == '__main__':
-    main(Path("index-sources/aws-cli/doc/build/json/reference/"))
+    export_as_json = "--export-as-json" in sys.argv
+    main(
+        Path("index-sources/aws-cli/doc/build/json/reference/"),
+        export_as_json=export_as_json,
+    )
