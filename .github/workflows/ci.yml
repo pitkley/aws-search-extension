@@ -59,6 +59,8 @@ jobs:
       with:
         submodules: recursive
 
+    - run: npm ci
+
     - name: Get submodule commit hashes
       id: submodule-hashes
       run: |
@@ -108,20 +110,36 @@ jobs:
       run: |
         hack/generate-index-cli.py
         hack/generate-index-cli.py --export-as-json
+    - name: 'aws-cli: verify generated index'
+      if: steps.cache-awscli.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/api.schema.json \
+          -d json-indices/api.json
 
     - name: 'aws-cloudformation-user-guide: Generate index'
       if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
       run: |
         hack/generate-index-cfn.py
         hack/generate-index-cfn.py --export-as-json
+    - name: 'aws-cloudformation-user-guide: verify generated index'
+      if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/cfn.schema.json \
+          -d json-indices/cfn.json
 
     - name: 'botocore: Generate index'
       if: steps.cache-botocore.outputs.cache-hit != 'true'
       run: |
         hack/generate-index-api.py
         hack/generate-index-api.py --export-as-json
-
-    - run: npm install
+    - name: 'botocore: verify generated index'
+      if: steps.cache-botocore.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/cli.schema.json \
+          -d json-indices/cli.json
 
     - name: 'Firefox: prepare manifest'
       run: make firefox

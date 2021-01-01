@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "minProperties": 1,
+  "patternProperties": {
+    ".*": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        ".*": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
