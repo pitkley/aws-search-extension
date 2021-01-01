@@ -9,6 +9,7 @@
     "webextension-polyfill": "^0.7.0"
   },
   "devDependencies": {
+    "ajv-cli": "^4.0.1",
     "vendor-copy": "^2.0.0",
     "web-ext": "^5.4.1"
   },
