@@ -98,8 +98,20 @@ def main(
         if not export_as_json:
             fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
             fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
-            fh.write("var cfnSearchIndex=")
-        json.dump(final_index, fh, sort_keys=True)
+            fh.write("var cfnSearchIndex={\n")
+        else:
+            fh.write("{\n")
+
+        service_count = len(final_index.keys())
+        for index, (service_name, service) in enumerate(sorted(final_index.items()), start=1):
+            service_name = service_name.replace("\\", "")
+            fh.write(f"  \"{service_name}\":")
+            json.dump(service, fh, sort_keys=True)
+            if not export_as_json or index != service_count:
+                fh.write(",")
+            fh.write("\n")
+
+        fh.write("}")
         if not export_as_json:
             fh.write(";\n")
 
