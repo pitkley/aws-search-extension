@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import Optional
 
 
 @dataclass
@@ -95,11 +96,13 @@ def process_operation(operation_path: Path, prefixes: list) -> list[ServiceOpera
     return operations
 
 
-def process_service(service_path: Path) -> ServiceIndex:
+def process_service(service_path: Path) -> Optional[ServiceIndex]:
     operations = []
     for operation_file in service_path.iterdir():
         operations.extend(process_operation(operation_file, []))
 
+    if not operations:
+        return None
     return ServiceIndex(
         name=service_path.name,
         operations=operations,
@@ -127,6 +130,8 @@ def main(
             continue
         print(f"Generating {service_path.name}...")
         service_index = process_service(service_path)
+        if not service_index:
+            continue
         services[service_index.name] = service_index
 
     # Persist the final-index to the extension
