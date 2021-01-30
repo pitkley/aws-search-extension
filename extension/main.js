@@ -28,15 +28,27 @@ const c = new Compat();
     const omnibox = new Omnibox(defaultSuggestion, c.omniboxPageSize());
 
     omnibox.bootstrap({
-        onSearch: CfnSearcher.prototype.search.bind(cfnSearcher),
-        onFormat: CfnSearcher.prototype.format.bind(cfnSearcher),
-        onAppend: CfnSearcher.prototype.append.bind(cfnSearcher),
+        onSearch: ApiSearcher.prototype.globalSearch.bind(apiSearcher),
+        onFormat: ApiSearcher.prototype.format.bind(apiSearcher),
+        onAppend: ApiSearcher.prototype.append.bind(apiSearcher),
         onEmptyNavigate: (content, disposition) => {
             commandManager.handleCommandEnterEvent(content, disposition);
         },
         afterNavigated: (query, result) => {
             HistoryCommand.record(query, result);
             updateCommand.scheduleIndexUpdates(true);
+        },
+    });
+
+    omnibox.addPrefixQueryEvent("!", {
+        onSearch: (query) => {
+            query = query.substring(1).trim();
+            return cfnSearcher.search(query);
+        },
+        onFormat: CfnSearcher.prototype.format.bind(cfnSearcher),
+        onAppend: (query) => {
+            query = query.substring(1).trim();
+            return cfnSearcher.append(query);
         },
     });
 

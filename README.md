@@ -8,7 +8,7 @@ It provides search results for AWS API references and the AWS CloudFormation ref
 ![Demo GIF showcasing AWS search extension](docs/demo.gif)
 
 You can start searching by typing the keyword `aws` into the searchbar, followed by a space (or also tab in Chromium-based browsers), which will select the AWS search extension.
-Everything you now type will search through the included indices of the AWS CloudFormation and AWS API documentation.
+Everything you now type will search through the included indices of the AWS CloudFormation documentation and the AWS API and aws-cli references.
 
 You can find detailed information on how to structure your queries in the sections below.
 
@@ -24,29 +24,17 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix        | Description                                              |
-| ------------- | -------------------------------------------------------- |
-| *(no prefix)* | Search the AWS CloudFormation documentation              |
-| `/`           | Search all API references                                |
-| `<service>/`  | Search the API references for the matching services.     |
-| `@`           | Search all aws-cli references                            |
-| `<service>@`  | Search the aws-cli references for the matching services. |
+| Prefix               | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| *(no prefix)* or `/` | Search all API references                                |
+| `<service>/`         | Search the API references for the matching services.     |
+| `@`                  | Search all aws-cli references                            |
+| `<service>@`         | Search the aws-cli references for the matching services. |
+| `!`                  | Search the AWS CloudFormation documentation              |
 
 ### Example queries
 
-* `a::e::instance`
-
-    Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
-
-    ![Example suggestions for query `a::e::instance`](docs/cfn-aeinstance.png)
-
-* `findinmap`
-
-    Fuzzy-searches the AWS CloudFormation documentation for the matching documentation for `Fn::FindInMap`.
-
-    ![Example suggestions for query `findinmap`](docs/cfn-findinmap.png)
-
-* `/createmultipart`
+* `createmultipart` or `/createmultipart`
 
     Fuzzy-searches all AWS API references for API-operations matching `createmultipart`.
 
@@ -81,6 +69,18 @@ You can use the following kinds of search-queries:
     Searches CLI-operations matching `job` in all services matching `data`.
 
     ![Example suggestions for query `data@job`](docs/cli-data-job.png)
+
+* `!a::e::instance`
+
+    Fuzzy-searches all supported references for matching resources, in this case `AWS::EC2::Instance` should be the top match.
+
+    ![Example suggestions for query `a::e::instance`](docs/cfn-aeinstance.png)
+
+* `!findinmap`
+
+    Fuzzy-searches the AWS CloudFormation documentation for the matching documentation for `Fn::FindInMap`.
+
+    ![Example suggestions for query `findinmap`](docs/cfn-findinmap.png)
 
 ## FAQ
 

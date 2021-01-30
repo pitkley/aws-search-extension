@@ -135,11 +135,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><em>(no prefix)</em></td>
-        <td>Search the AWS CloudFormation documentation</td>
-    </tr>
-    <tr>
-        <td><code>/</code></td>
+        <td><em>(no prefix)</em> or <code>/</code></td>
         <td>Search all API references</td>
     </tr>
     <tr>
@@ -154,6 +150,10 @@
         <td><code>&lt;service&gt;@</code></td>
         <td>Search the aws-cli references for the matching services.</td>
     </tr>
+    <tr>
+        <td><code>!</code></td>
+        <td>Search the AWS CloudFormation documentation</td>
+    </tr>
     </tbody>
 </table>
 <h2>Example queries</h2>
@@ -166,19 +166,7 @@
     </thead>
     <tbody>
     <tr>
-        <td><code>a::e::instance</code></td>
-        <td>Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case <code>AWS::EC2::Instance</code>
-            should be the top match.
-        </td>
-    </tr>
-    <tr>
-        <td><code>findinmap</code></td>
-        <td>Fuzzy-searches the AWS CloudFormation documentation, in this case the page explaining the intrinsic function
-            <code>Fn::FindInMap</code> should be the top match.
-        </td>
-    </tr>
-    <tr>
-        <td><code>/createmultipart</code></td>
+        <td><code>createmultipart</code> or <code>/createmultipart</code></td>
         <td>Searches the API operations of all services for ones that match <code>createmultipart</code>. The top result
             should be the S3-API-operation <code>CreateMultipartUpload</code>, but it will also find e.g. the
             Glacier-API-operation <code>InitiateMultipartUpload</code>.
@@ -216,6 +204,18 @@
         <td>Searches CLI-operations matching <code>job</code> in all services matching <code>data</code>. Returns for
             example the AWS Data Exchange <code>get-job</code> operation, and the AWS Glue DataBrew
             <code>list-jobs</code> operation.
+        </td>
+    </tr>
+    <tr>
+        <td><code>!a::e::instance</code></td>
+        <td>Fuzzy-searches the AWS CloudFormation documentaiton for matching resources, in this case <code>AWS::EC2::Instance</code>
+            should be the top match.
+        </td>
+    </tr>
+    <tr>
+        <td><code>!findinmap</code></td>
+        <td>Fuzzy-searches the AWS CloudFormation documentation, in this case the page explaining the intrinsic function
+            <code>Fn::FindInMap</code> should be the top match.
         </td>
     </tr>
     </tbody>
