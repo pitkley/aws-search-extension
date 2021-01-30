@@ -89,7 +89,7 @@ You can use the following kinds of search-queries:
     The extension uses pre-built indices to support a fast search.
     The indices contain just enough data to be useful to the users (it contains summaries for all results), but not too much to slow down the search.
 
-* *How are the indices update?*
+* *How are the indices updated?*
 
     By default, the extension uses indices that are directly bundled with the extension itself.
     While this has the advantage that no network requests are made from the extension at all, this can lead to outdated indices.
