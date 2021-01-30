@@ -11,7 +11,7 @@ local packageJson = std.parseJson(packageJsonStr);
 local json = manifest.new(
   name='AWS Search Extension',
   version=packageJson.version,
-  keyword='aws',
+  keyword='ase',
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
              .addIcons(icons())
