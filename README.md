@@ -7,7 +7,7 @@ It provides search results for AWS API references and the AWS CloudFormation ref
 
 ![Demo GIF showcasing AWS search extension](docs/demo.gif)
 
-You can start searching by typing the keyword `aws` into the searchbar, followed by a space (or also tab in Chromium-based browsers), which will select the AWS search extension.
+You can **start searching by typing the keyword `ase` into the searchbar,** followed by a space (or also tab in Chromium-based browsers), which will select the AWS search extension.
 Everything you now type will search through the included indices of the AWS CloudFormation documentation and the AWS API and aws-cli references.
 
 You can find detailed information on how to structure your queries in the sections below.
@@ -98,7 +98,7 @@ You can use the following kinds of search-queries:
 
     1. Trigger a manual index update.
 
-        Use your browser's omnibox, activate the AWS search extension (e.g. by typing `aws` followed by a space), then enter `:update`.
+        Use your browser's omnibox, activate the AWS search extension (e.g. by typing `ase` followed by a space), then enter `:update`.
         You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices where last updated:
 
         ![Triggering a manual update](docs/aes-command-update.png)
