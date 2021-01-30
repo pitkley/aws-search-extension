@@ -8,6 +8,9 @@
   "packageRules": [
     {
       "managers": ["git-submodules"],
+      "matchPackagePatterns": [
+        "^index-sources/",
+      ],
       "automerge": true,
       "automergeType": "branch",
     },
