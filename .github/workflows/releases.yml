@@ -1,0 +1,259 @@
+name: Prepare release
+
+on:
+  push:
+    tags:
+    - 'v[0-9]+\.[0-9]+\.[0-9]+'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: AMO Production
+
+    steps:
+    - name: Install node toolchain
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '^3.9'
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15.x
+    - name: Install jsonnet
+      run: go get github.com/google/go-jsonnet/cmd/jsonnet
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - run: npm ci
+
+    - name: Get submodule commit hashes
+      id: submodule-hashes
+      run: |
+        awscli_hash="$(git rev-parse @:index-sources/aws-cli)"
+        awscloudformationuserguide_hash="$(git rev-parse @:index-sources/aws-cloudformation-user-guide)"
+        botocore_hash="$(git rev-parse @:index-sources/botocore)"
+        echo "::set-output name=awscli-hash::${awscli_hash}"
+        echo "::set-output name=awscloudformationuserguide-hash::${awscloudformationuserguide_hash}"
+        echo "::set-output name=botocore-hash::${botocore_hash}"
+
+    - name: 'aws-cli: index cache'
+      id: cache-awscli
+      uses: actions/cache@v2
+      with:
+        path: |
+          index-sources/aws-cli/doc/build/
+          extension/index/cli.js
+          json-indices/cli.json
+        key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}-${{ hashFiles('hack/generate-index-cli.py') }}
+    - name: 'aws-cloudformation-user-guide: index cache'
+      id: cache-awscloudformationuserguide
+      uses: actions/cache@v2
+      with:
+        path: |
+          extension/index/cfn.js
+          json-indices/cfn.js
+        key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
+    - name: 'botocore: index cache'
+      id: cache-botocore
+      uses: actions/cache@v2
+      with:
+        path: |
+          extension/index/api.js
+          json-indices/api.json
+        key: indices-botocore-${{ steps.submodule-hashes.outputs.botocore-hash }}-${{ hashFiles('hack/generate-index-api.py') }}
+
+    - name: 'aws-cli: Build aws-cli docs'
+      if: steps.cache-awscli.outputs.cache-hit != 'true'
+      working-directory: index-sources/aws-cli/
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-docs.txt
+        pip install -e .
+        make -C doc json
+    - name: 'aws-cli: Generate index'
+      if: steps.cache-awscli.outputs.cache-hit != 'true'
+      run: |
+        hack/generate-index-cli.py
+        hack/generate-index-cli.py --export-as-json
+    - name: 'aws-cli: verify generated index'
+      if: steps.cache-awscli.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/api.schema.json \
+          -d json-indices/api.json
+
+    - name: 'aws-cloudformation-user-guide: Generate index'
+      if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
+      run: |
+        hack/generate-index-cfn.py
+        hack/generate-index-cfn.py --export-as-json
+    - name: 'aws-cloudformation-user-guide: verify generated index'
+      if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/cfn.schema.json \
+          -d json-indices/cfn.json
+
+    - name: 'botocore: Generate index'
+      if: steps.cache-botocore.outputs.cache-hit != 'true'
+      run: |
+        hack/generate-index-api.py
+        hack/generate-index-api.py --export-as-json
+    - name: 'botocore: verify generated index'
+      if: steps.cache-botocore.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/cli.schema.json \
+          -d json-indices/cli.json
+
+    - name: 'Firefox: prepare extension ID fragment'
+      run: echo -n '${{ secrets.AMO_EXTENSION_UUID }}' > hack/jsonnet-fragments/browserspecificsettings-gecko-id
+    - name: 'Firefox: prepare manifest'
+      run: make firefox
+    - name: 'Firefox: web-ext build'
+      uses: kewisch/action-web-ext@v1
+      id: web-ext-build-firefox
+      with:
+        cmd: build
+        source: extension
+        artifacts: web-ext-artifacts/firefox/
+    - name: 'Firefox (unlisted): prepare manifest'
+      run: make firefox.unlisted
+    - name: 'Firefox (unlisted): web-ext build'
+      uses: kewisch/action-web-ext@v1
+      id: web-ext-build-firefox-unlisted
+      with:
+        cmd: build
+        source: extension
+        artifacts: web-ext-artifacts/firefox.unlisted/
+
+    - name: 'Firefox (unlisted): web-ext sign'
+      id: web-ext-sign-firefox-unlisted
+      uses: kewisch/action-web-ext@v1
+      with:
+        cmd: sign
+        source: ${{ steps.web-ext-build-firefox-unlisted.outputs.target }}
+        channel: unlisted
+        apiUrlPrefix: ${{ secrets.AMO_URL_PREFIX }}
+        apiKey: ${{ secrets.AMO_SIGN_KEY }}
+        apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
+        timeout: 900000
+
+    - name: 'Chrome: prepare manifest'
+      run: make chrome
+    - name: 'Chrome: web-ext build'
+      uses: kewisch/action-web-ext@v1
+      id: web-ext-build-chrome
+      with:
+        cmd: build
+        source: extension
+        artifacts: web-ext-artifacts/chrome/
+
+    - name: 'Edge: prepare manifest'
+      run: make edge
+    - name: 'Edge: web-ext build'
+      uses: kewisch/action-web-ext@v1
+      id: web-ext-build-edge
+      with:
+        cmd: build
+        source: extension
+        artifacts: web-ext-artifacts/edge/
+
+    - name: Upload extension-ZIPs as artifact to workflow
+      uses: actions/upload-artifact@v2
+      with:
+        name: aws-search-extension
+        path: |
+          ${{ steps.web-ext-build-firefox.outputs.target }}
+          ${{ steps.web-ext-build-firefox-unlisted.outputs.target }}
+          ${{ steps.web-ext-build-chrome.outputs.target }}
+          ${{ steps.web-ext-build-edge.outputs.target }}
+
+    - name: Get tag name
+      id: tag
+      run: |
+        if [[ "${{ github.ref }}" =~ ^refs/tags/(.+)$ ]]; then
+          echo "::set-output name=value::${BASH_REMATCH[1]}"
+        else
+          echo "::error ::Expected a tag"
+          exit 1
+        fi
+    - name: Prepare release
+      id: prepare-release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: true
+        prerelease: false
+        body: |
+          # Summary
+
+          TODO!
+
+          # About AWS search extension
+
+          AWS search extension is a browser-extension compatible with Google Chrome, Mozilla Firefox and Microsoft Edge (and probably most Chromium-based browsers). It provides search results for AWS API references and the AWS CloudFormation reference, and opens the official AWS documentation page when you select an item by pressing Enter.
+
+          You can start searching by typing the keyword `aws` into the searchbar, followed by a space (or also tab in Chromium-based browsers), which will select the AWS search extension. Everything you now type will search through the included indices of the AWS CloudFormation and AWS API documentation.
+
+          You can find detailed information on how to structure in the [official README](https://github.com/pitkley/aws-search-extension).
+
+          ## Official extension/add-on store links
+
+          * Google Chrome: https://chrome.google.com/webstore/detail/aws-search-extension/plpaphbmolljpgbkjjfkhcffhffobngd
+          * Mozilla Firefox: https://addons.mozilla.org/firefox/addon/aws-search-extension/
+          * Microsoft Edge: https://microsoftedge.microsoft.com/addons/detail/aws-search-extension/ddokgnahbddokclcciibbpelhjgemihl
+
+          ## Extension packages
+
+          You can find the extension packages attached.
+
+          How to install the extension package:
+
+          * Google Chrome/Chromium
+            * Download the attached file `aws_search_extension-chrome-${{ steps.tag.outputs.value }}.zip`.
+            * Open <chrome://extensions> in your browser.
+            * Drag-and-drop the downloaded ZIP into the extensions-view.
+          * Firefox
+            * Download the attached file `aws_search_extension-firefox-${{ steps.tag.outputs.value }}.xpi`.
+            * Open `about:addons` in your browser.
+            * Drag-and-drop the downloaded ZIP into the extensions-view.
+
+    - name: 'Firefox (unlisted): upload signed extension to release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.prepare-release.outputs.upload_url }}
+        asset_path: ${{ steps.web-ext-sign-firefox.outputs.target }}
+        asset_name: aws_search_extension-firefox-${{ steps.tag.outputs.value }}.xpi
+        asset_content_type: application/zip
+    - name: 'Chrome: upload extension to release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.prepare-release.outputs.upload_url }}
+        asset_path: ${{ steps.web-ext-build-chrome.outputs.target }}
+        asset_name: aws_search_extension-chrome-${{ steps.tag.outputs.value }}.zip
+        asset_content_type: application/zip
+    - name: 'Edge: upload extension to release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.prepare-release.outputs.upload_url }}
+        asset_path: ${{ steps.web-ext-build-edge.outputs.target }}
+        asset_name: aws_search_extension-edge-${{ steps.tag.outputs.value }}.zip
+        asset_content_type: application/zip
