@@ -8,9 +8,12 @@ local icons() = {
 local packageJsonStr = importstr 'package.json';
 local packageJson = std.parseJson(packageJsonStr);
 
+local fragmentVersionSuffix = importstr 'hack/jsonnet-fragments/version-suffix';
+local fragmentBrowserSpecificSettingsGeckoId = importstr 'hack/jsonnet-fragments/browserspecificsettings-gecko-id';
+
 local json = manifest.new(
   name='AWS Search Extension',
-  version=packageJson.version,
+  version='%s%s' % [packageJson.version, fragmentVersionSuffix],
   keyword='ase',
   description='A search-extension for quick, fuzzy-search results for AWS developers!',
 )
@@ -25,4 +28,16 @@ local json = manifest.new(
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(['main.js']);
 
-json
+local browser = std.extVar('browser');
+if browser == 'firefox' then
+  if fragmentBrowserSpecificSettingsGeckoId != "" then
+    json {
+      browser_specific_settings: {
+        gecko: {
+          id: fragmentBrowserSpecificSettingsGeckoId
+        }
+      }
+    }
+  else json
+else
+  json
