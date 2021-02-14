@@ -20,7 +20,7 @@ local json = manifest.new(
              .addIcons(icons())
              .addPermissions(['storage', 'unlimitedStorage'])
              .addBackgroundScripts(['vendored/webextension-polyfill/browser-polyfill.min.js'])
-             .addBackgroundScripts(['settings.js', 'utils.js'])
+             .addBackgroundScripts(['settings.js', 'utils.js', 'updateInfo.js'])
              .addBackgroundScripts(['vendored/fuzzy-search/FuzzySearch.js'])
              .addBackgroundScripts(utils.js_files('command', ['help', 'update']))
              .addBackgroundScripts(utils.js_files('search', ['lib']))
