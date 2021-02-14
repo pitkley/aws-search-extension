@@ -39,5 +39,9 @@ if browser == 'firefox' then
       }
     }
   else json
+else if browser == 'chrome' then
+  json {
+    key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqcanHEBpM8ZQG+zY2Xy+nyu5XiRjqSrFH+rutHxeyEqswA4KYNH9FFEgjy3On2+W2udY0CJzaBMgC6nPH2nFzdVGfc2CK+0wgLjYAkQjnzTd/0jFriZrSH5S8fXJOFoEZRz3wbHX3rfOI4FpbtjCMCwDQITBgqCcF1BzFRHBDQdwv2WviJUHbuPkVO7QaeTJ4tWi0E5+rVHPhkHpf/zerAn275xqbR/jY3rGrlP6OTOApvjd0pSKXoznuoSKjp6Ma0O8o1aQgZD9JHRHKr7OHmqZKx7MZImHOw0JOopytkR5dfsuM1pU1xYUuHNUgjLDfeeX2N2Z0cBZlC8bt8Wv+QIDAQAB'
+  }
 else
   json
