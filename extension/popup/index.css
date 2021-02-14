@@ -1,0 +1,84 @@
+body {
+    overflow-x: hidden;
+    width: 450px;
+}
+
+header {
+    overflow: auto;
+}
+
+header img {
+    float: left;
+    width: 100px;
+}
+
+header h1 {
+    float: left;
+}
+
+table {
+    font-size: 100%;
+    border-collapse: collapse;
+}
+
+table td {
+    border-bottom: 1px solid darkgrey;
+    border-right: 1px solid darkgrey;
+}
+
+table thead td {
+    border-bottom: 2px solid black;
+}
+
+table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+table tr td:last-child {
+    border-right: 0;
+}
+
+input#updateFrequencySecondsInput {
+    max-width: 80px;
+}
+
+
+/* Tooltip styling retrieved from https://www.w3schools.com/howto/howto_css_tooltip.asp */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .text {
+    visibility: visible;
+    opacity: 1;
+}
