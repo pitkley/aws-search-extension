@@ -236,7 +236,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.prepare-release.outputs.upload_url }}
-        asset_path: ${{ steps.web-ext-sign-firefox.outputs.target }}
+        asset_path: ${{ steps.web-ext-sign-firefox-unlisted.outputs.target }}
         asset_name: aws_search_extension-firefox-${{ steps.tag.outputs.value }}.xpi
         asset_content_type: application/zip
     - name: 'Chrome: upload extension to release'
