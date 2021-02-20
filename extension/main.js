@@ -6,6 +6,7 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+const COMMAND_PREFIX = "!";
 const c = new Compat();
 (async () => {
     const apiSearcher = new ApiSearcher(await storageGetOrDefault("index-api", apiSearchIndex));
@@ -19,17 +20,14 @@ const c = new Compat();
     ]);
 
     const commandManager = new CommandManager(
+        COMMAND_PREFIX,
         new HelpCommand(),
         new HistoryCommand(),
         updateCommand,
     );
 
     const defaultSuggestion = `A search-extension for quick, fuzzy-search results for AWS developers!`;
-    const omnibox = new Omnibox(
-        defaultSuggestion,
-        c.omniboxPageSize(),
-        "!",
-    );
+    const omnibox = new Omnibox(defaultSuggestion, c.omniboxPageSize());
 
     omnibox.bootstrap({
         onSearch: ApiSearcher.prototype.globalSearch.bind(apiSearcher),
@@ -39,7 +37,9 @@ const c = new Compat();
             commandManager.handleCommandEnterEvent(content, disposition);
         },
         afterNavigated: (query, result) => {
-            HistoryCommand.record(query, result);
+            if (query && !query.startsWith(COMMAND_PREFIX) && result) {
+                HistoryCommand.record(query, result);
+            }
             updateCommand.scheduleIndexUpdates(true);
         },
     });
@@ -115,11 +115,11 @@ const c = new Compat();
         },
     });
 
-    omnibox.addPrefixQueryEvent("!", {
+    omnibox.addPrefixQueryEvent(COMMAND_PREFIX, {
         onSearch: (query) => {
             return commandManager.execute(query);
         }
     });
 
-    omnibox.addNoCacheQueries("!");
+    omnibox.addNoCacheQueries(COMMAND_PREFIX);
 })();
