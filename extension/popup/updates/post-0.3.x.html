@@ -1,0 +1,125 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body>
+<header>
+    <img src="../../logo.png"/>
+    <h1>AWS search extension - Updated</h1>
+</header>
+<section>
+    <h2>Changes</h2>
+    <article>
+        <h3><span style="color: red;">VERY IMPORTANT!</span> Keyword changed from <code>aws</code> to <code>ase</code></h3>
+        <p>
+            After some more use of the extension it became evident that using <code>aws</code> as
+            the search keyword was suboptimal. If you use your browser's omnibox for regular web
+            searches, searching for anything related to AWS most likely will have you type
+            <code>aws</code> followed by a space, which triggers the extension, making searching the
+            web for AWS content very inconvenient.
+        </p>
+        <p>
+            To circumvent this problem, this update changes the keyword to <code>ase</code>, short
+            for "AWS search extension." While it is not quite as intuitive, it has the massive
+            advantage of not overlapping with the regular search-term <em>aws</em>, while still
+            retaining most of the advantages that the <code>aws</code> keyword had:
+        </p>
+        <ul>
+            <li>It is as short with only 3 characters in length.</li>
+            <li>
+                It is as easy to type: the characters are all in the left cluster of the keyboard
+                for QWERTY, QWERTZ, and AZERTY keyboard layouts, and they are in the home row for
+                Dvorak.
+            </li>
+        </ul>
+    </article>
+    <article>
+        <h3>Default search and query prefixes changed</h3>
+        <p>
+            Previously, any non-prefixed search-term would automatically search in the AWS
+            CloudFormation documentation. Now it will search through the AWS API references instead,
+            since this is the more likely use-case of people using the extension.
+        </p>
+        <p>
+            Searching for AWS CloudFormation resources is still possible, of course. You can
+            trigger a search for AWS CloudFormation resources either by prefixing your query with a
+            colon <code>:</code>, or by including two colons <code>::</code> somewhere in your
+            search-term.
+        </p>
+        <p>
+            In other words, both of the following search-terms will show you results from the AWS
+            CloudFormation documentation:
+        </p>
+        <ul>
+            <li>
+                <code>a::e::instance</code> will match because it has to consecutive colons in the
+                query. It should show <code>AWS::EC2::Instance</code> as the first result.
+            </li>
+            <li>
+                <code>:findinmap</code> will match because it starts with a colon. It should show
+                <code>Fn::FindInMap</code> as the first result.
+            </li>
+        </ul>
+        <p>
+            The following table summarizes all the queries that are now valid:
+        </p>
+        <table>
+            <thead>
+            <tr>
+                <td>Prefix</td>
+                <td>Description</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><em>(no prefix)</em> or <code>/</code></td>
+                <td>Search all API references</td>
+            </tr>
+            <tr>
+                <td><code>&lt;service&gt;/</code></td>
+                <td>Search the API references for the matching services.</td>
+            </tr>
+            <tr>
+                <td><code>@</code></td>
+                <td>Search all aws-cli references</td>
+            </tr>
+            <tr>
+                <td><code>&lt;service&gt;@</code></td>
+                <td>Search the aws-cli references for the matching services.</td>
+            </tr>
+            <tr>
+                <td><code>:</code> <em>(or <code>::</code> anywhere in the query)</em></td>
+                <td>Search the AWS CloudFormation documentation</td>
+            </tr>
+            </tbody>
+        </table>
+    </article>
+</section>
+<section>
+    <h2>Further information</h2>
+    <article>
+        <p>
+            AWS search extension is a browser-extension compatible with Google Chrome, Mozilla
+            Firefox and Microsoft Edge (and probably most Chromium-based browsers). It provides
+            search results for AWS API references and the AWS CloudFormation reference, and opens
+            the official AWS documentation page when you select an item by pressing Enter.
+        </p>
+        <ul>
+            <li><a href="https://github.com/pitkley/aws-search-extension">Official repository (github.com)</a></li>
+            <li><a href="https://github.com/pitkley/aws-search-extension/issues/new">Report an issue (github.com)</a></li>
+        </ul>
+    </article>
+</section>
+<section class="affiliation">
+    <h2>Affiliation</h2>
+    <p>
+        The AWS search extension has no official affiliation with Amazon Web Services, Inc.,
+        Amazon.com, Inc., or any of its affiliates. Amazon Web Services is a trademark of
+        Amazon.com, Inc. or its affiliates in the United States and/or other countries.
+    </p>
+</section>
+<script src="../../vendored/webextension-polyfill/browser-polyfill.min.js" type="text/javascript"></script>
+<script src="updates.js" type="text/javascript"></script>
+</body>
+</html>
