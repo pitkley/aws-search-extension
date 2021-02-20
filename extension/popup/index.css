@@ -15,8 +15,18 @@ body.popup {
     padding: 5px;
 }
 
+code {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0 5px 0 5px;
+    background-color: rgb(242, 242, 242);
+    border-radius: 5px;
+}
+
 header {
     overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 header img {
@@ -28,13 +38,26 @@ header h1 {
     float: left;
 }
 
+section {
+    counter-reset: changes;
+}
+
 section.affiliation {
     font-size: 70%;
+}
+
+h3::before {
+    counter-increment: changes;
+    content: counter(changes) ". ";
 }
 
 table {
     font-size: 100%;
     border-collapse: collapse;
+}
+
+article table {
+    width: 100%;
 }
 
 table td {

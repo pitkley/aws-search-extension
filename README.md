@@ -24,13 +24,13 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix                               | Description                                              |
-| ------------------------------------ | -------------------------------------------------------- |
-| *(no prefix)* or `/`                 | Search all API references                                |
-| `<service>/`                         | Search the API references for the matching services.     |
-| `@`                                  | Search all aws-cli references                            |
-| `<service>@`                         | Search the aws-cli references for the matching services. |
-| `:` *(or `::` anywhere in the query) | Search the AWS CloudFormation documentation              |
+| Prefix                                | Description                                              |
+| ------------------------------------- | -------------------------------------------------------- |
+| *(no prefix)* or `/`                  | Search all API references                                |
+| `<service>/`                          | Search the API references for the matching services.     |
+| `@`                                   | Search all aws-cli references                            |
+| `<service>@`                          | Search the aws-cli references for the matching services. |
+| `:` *(or `::` anywhere in the query)* | Search the AWS CloudFormation documentation              |
 
 ### Example queries
 

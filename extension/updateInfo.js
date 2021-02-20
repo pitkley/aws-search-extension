@@ -32,6 +32,14 @@ const extensionUpdated = async ({ currentVersion, previousVersion }) => {
         minor: previousMinor,
         patch: previousPatch,
     } = semver(previousVersion);
+
+    // Update from 0.3.x -> notify about keyword change
+    if (previousMajor === 0 && previousMinor === 3 &&
+        (currentMajor > previousMajor || currentMinor > previousMinor)) {
+        await browser.tabs.create({
+            url: browser.extension.getURL("popup/updates/post-0.3.x.html"),
+        });
+    }
 };
 
 const installListener = async ({ previousVersion, reason }) => {
