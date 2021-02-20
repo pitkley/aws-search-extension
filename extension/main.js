@@ -25,7 +25,11 @@ const c = new Compat();
     );
 
     const defaultSuggestion = `A search-extension for quick, fuzzy-search results for AWS developers!`;
-    const omnibox = new Omnibox(defaultSuggestion, c.omniboxPageSize());
+    const omnibox = new Omnibox(
+        defaultSuggestion,
+        c.omniboxPageSize(),
+        "!",
+    );
 
     omnibox.bootstrap({
         onSearch: ApiSearcher.prototype.globalSearch.bind(apiSearcher),
@@ -40,7 +44,7 @@ const c = new Compat();
         },
     });
 
-    omnibox.addPrefixQueryEvent("!", {
+    omnibox.addPrefixQueryEvent(":", {
         onSearch: (query) => {
             query = query.substring(1).trim();
             return cfnSearcher.search(query);
@@ -50,6 +54,11 @@ const c = new Compat();
             query = query.substring(1).trim();
             return cfnSearcher.append(query);
         },
+    });
+    omnibox.addRegexQueryEvent(/::/, {
+        onSearch: CfnSearcher.prototype.search.bind(cfnSearcher),
+        onFormat: CfnSearcher.prototype.format.bind(cfnSearcher),
+        onAppend: CfnSearcher.prototype.append.bind(cfnSearcher),
     });
 
     omnibox.addRegexQueryEvent(/^[^\/]+\//, {
@@ -106,11 +115,11 @@ const c = new Compat();
         },
     });
 
-    omnibox.addPrefixQueryEvent(":", {
+    omnibox.addPrefixQueryEvent("!", {
         onSearch: (query) => {
             return commandManager.execute(query);
         }
     });
 
-    omnibox.addNoCacheQueries(":");
+    omnibox.addNoCacheQueries("!");
 })();

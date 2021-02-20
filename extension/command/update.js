@@ -23,10 +23,10 @@ class UpdateCommand extends Command {
         }
 
         return [{
-            content: ":update",
+            content: "!update",
             description: `Press ${c.match("Enter")} to update the search indices.`,
         }, {
-            content: ":update",
+            content: "!update",
             description: `Last update: ${c.match(lastUpdate)}`
         }];
     }
