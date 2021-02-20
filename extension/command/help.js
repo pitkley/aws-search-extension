@@ -13,7 +13,7 @@ class HelpCommand extends Command {
 
     onExecute(_arg) {
         const helpValues = [
-            ["!", `Use prefix ${c.match("!")} to execute a command (!update, !history, etc.)`],
+            [COMMAND_PREFIX, `Use prefix ${c.match(COMMAND_PREFIX)} to execute a command (${COMMAND_PREFIX}update, ${COMMAND_PREFIX}history, etc.)`],
             [":", `Use prefix ${c.match(":")} to search for AWS CloudFormation resources`],
             ["/", `Use prefix ${c.match("/")} to search for AWS API operations`],
             ["<service>/", `Use prefix ${c.match(c.escape("<service>/"))} to search for service-specific API operations`],
