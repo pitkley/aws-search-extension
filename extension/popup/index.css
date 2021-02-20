@@ -1,6 +1,18 @@
+* {
+    font-family: sans-serif;
+}
+
 body {
+    margin: auto;
+    width: 768px;
+    font-size: medium;
+}
+
+body.popup {
     overflow-x: hidden;
     width: 450px;
+    font-size: small;
+    padding: 5px;
 }
 
 header {
@@ -16,6 +28,10 @@ header h1 {
     float: left;
 }
 
+section.affiliation {
+    font-size: 70%;
+}
+
 table {
     font-size: 100%;
     border-collapse: collapse;
@@ -24,6 +40,11 @@ table {
 table td {
     border-bottom: 1px solid darkgrey;
     border-right: 1px solid darkgrey;
+    padding: 2px;
+}
+
+table thead {
+    font-weight: bold;
 }
 
 table thead td {
@@ -52,12 +73,12 @@ input#updateFrequencySecondsInput {
 
 .tooltip .text {
     visibility: hidden;
-    width: 200px;
+    width: 250px;
     background-color: #555;
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 5px 5px;
     position: absolute;
     z-index: 1;
     bottom: 125%;
@@ -81,4 +102,11 @@ input#updateFrequencySecondsInput {
 .tooltip:hover .text {
     visibility: visible;
     opacity: 1;
+}
+
+.tooltip .text code {
+    padding: 0;
+    font-size: 50%;
+    background-color: unset;
+    border-radius: 0;
 }
