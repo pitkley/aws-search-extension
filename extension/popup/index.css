@@ -30,12 +30,11 @@ header {
 }
 
 header img {
-    float: left;
     width: 100px;
 }
 
 header h1 {
-    float: left;
+    margin: 0;
 }
 
 section {

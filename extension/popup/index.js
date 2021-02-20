@@ -18,4 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     updateFrequencySecondsInput.onchange = function (event) {
         settings.updateFrequencySeconds = event.target.value;
     };
+
+    const extensionVersion = `v${browser.runtime.getManifest().version}`;
+    for (const element of document.getElementsByClassName("version")) {
+        element.innerText = extensionVersion;
+    }
 });
