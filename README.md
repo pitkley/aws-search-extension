@@ -24,13 +24,13 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix               | Description                                              |
-| -------------------- | -------------------------------------------------------- |
-| *(no prefix)* or `/` | Search all API references                                |
-| `<service>/`         | Search the API references for the matching services.     |
-| `@`                  | Search all aws-cli references                            |
-| `<service>@`         | Search the aws-cli references for the matching services. |
-| `!`                  | Search the AWS CloudFormation documentation              |
+| Prefix                               | Description                                              |
+| ------------------------------------ | -------------------------------------------------------- |
+| *(no prefix)* or `/`                 | Search all API references                                |
+| `<service>/`                         | Search the API references for the matching services.     |
+| `@`                                  | Search all aws-cli references                            |
+| `<service>@`                         | Search the aws-cli references for the matching services. |
+| `:` *(or `::` anywhere in the query) | Search the AWS CloudFormation documentation              |
 
 ### Example queries
 
@@ -70,13 +70,13 @@ You can use the following kinds of search-queries:
 
     ![Example suggestions for query `data@job`](docs/cli-data-job.png)
 
-* `!a::e::instance`
+* `a::e::instance`
 
-    Fuzzy-searches all supported references for matching resources, in this case `AWS::EC2::Instance` should be the top match.
+    Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
 
     ![Example suggestions for query `a::e::instance`](docs/cfn-aeinstance.png)
 
-* `!findinmap`
+* `:findinmap`
 
     Fuzzy-searches the AWS CloudFormation documentation for the matching documentation for `Fn::FindInMap`.
 
@@ -98,7 +98,7 @@ You can use the following kinds of search-queries:
 
     1. Trigger a manual index update.
 
-        Use your browser's omnibox, activate the AWS search extension (e.g. by typing `ase` followed by a space), then enter `:update`.
+        Use your browser's omnibox, activate the AWS search extension (e.g. by typing `ase` followed by a space), then enter `!update`.
         You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices where last updated:
 
         ![Triggering a manual update](docs/aes-command-update.png)
@@ -106,7 +106,7 @@ You can use the following kinds of search-queries:
         The update will execute in the background and will usually finish in a few seconds.
 
         Please note that you will not get further feedback on the status of the update.
-        If you want to verify that it has worked, simply open the `:update` results once more, the "Last update" time should have updated.
+        If you want to verify that it has worked, simply open the `!update` results once more, the "Last update" time should have updated.
 
     2. Enable automatic index updates.
 
