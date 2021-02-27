@@ -23,35 +23,51 @@
 </section>
 <section>
     <h2>Settings</h2>
-    <div>
-        <input type="checkbox" id="autoUpdateCheckbox"/>
-        <div class="tooltip">
-            <label for="autoUpdateCheckbox">
-                Enable automatic index updates.
-                &#9432;
-            </label>
-            <span class="text">
-                When enabled, the extension will regularly (by default once a day) retrieve the latest indices
-                automatically. The indices are retrieved from GitHub via
-                <code>raw.githubusercontent.com/pitkley/aws-search-extension</code>.
-            </span>
-        </div>
-    </div>
-    <div>
-        <input type="number"
-            id="updateFrequencySecondsInput"
-            min="3600"/>
-        <div class="tooltip">
-            <label for="updateFrequencySecondsInput">
-                seconds between index updates.
-                &#9432;
-            </label>
-            <span class="text">
-                If automatic index updates are enabled, the extension will automatically update the indices whenever you
-                execute a query, as long as the time since the last update is longer ago than the frequency specified here.
-            </span>
-        </div>
-    </div>
+    <table>
+    <colgroup>
+        <col span="1" style="width: 50%;">
+        <col span="1" style="width: 50%;">
+    </colgroup>
+    <tbody>
+    <tr>
+        <td>
+            <div class="tooltip">
+                <label for="autoUpdateCheckbox">
+                    Enable automatic index updates
+                    &#9432;
+                </label>
+                <span class="text">
+                    When enabled, the extension will regularly (by default once a day) retrieve the latest indices
+                    automatically. The indices are retrieved from GitHub via
+                    <code>raw.githubusercontent.com/pitkley/aws-search-extension</code>.
+                </span>
+            </div>
+        </td>
+        <td>
+            <input type="checkbox" id="autoUpdateCheckbox"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="tooltip">
+                <label for="updateFrequencySecondsInput">
+                    Seconds between index updates
+                    &#9432;
+                </label>
+                <span class="text">
+                    If automatic index updates are enabled, the extension will automatically update the indices whenever you
+                    execute a query, as long as the time since the last update is longer ago than the frequency specified here.
+                </span>
+            </div>
+        </td>
+        <td>
+            <input type="number"
+                id="updateFrequencySecondsInput"
+                min="3600"/>
+        </td>
+    </tr>
+    </tbody>
+    </table>
 </section>
 <section>
     <h2>Supported queries</h2>
