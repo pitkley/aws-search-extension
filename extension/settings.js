@@ -42,7 +42,9 @@ const settings = {
         localStorage.setItem("lastUpdate", date.getTime().toString())
     },
     lastUpdateNow() {
-        this.lastUpdate = new Date();
+        const now = new Date();
+        this.lastUpdate = now;
+        return now;
     },
 };
 
