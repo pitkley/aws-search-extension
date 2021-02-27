@@ -98,15 +98,20 @@ You can use the following kinds of search-queries:
 
     1. Trigger a manual index update.
 
-        Use your browser's omnibox, activate the AWS search extension (by typing `ase` followed by a space), then enter `!update`.
+        Open the AWS search extension popup, then click on the "Update now" button to get the latest indices.
+
+        ![Triggering a manual update through the popup](docs/aes-popup-update.png)
+
+        The timestamp for the last update will be shown as grey while the extension is updating the indices (which, depending on your internet connection, should not take more than 1-3 seconds) and then automatically update to the current timestamp once the update has finished successfully.
+
+        Alternatively you can also use your browser's omnibox to trigger an update.
+        Activate the AWS search extension (by typing `ase` followed by a space), then enter `!update`.
         You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices were last updated:
 
-        ![Triggering a manual update](docs/aes-command-update.png)
+        ![Triggering a manual update through the omnibox](docs/aes-command-update.png)
 
-        The update will execute in the background and will usually finish in a few seconds.
-
-        Please note that you will not get further feedback on the status of the update.
-        If you want to verify that it has worked, simply open the `!update` results once more, the "Last update" time should have updated.
+        Updates triggered through the omnibox will execute in the background and will usually finish in a few seconds.
+        Please note that you will not get further feedback on the status of the update if you trigger it through the omnibox.
 
     2. Enable automatic index updates.
 

@@ -19,6 +19,45 @@ document.addEventListener("DOMContentLoaded", function () {
         settings.updateFrequencySeconds = event.target.value;
     };
 
+    const refreshLastIndexUpdate = (error) => {
+        let lastUpdate;
+        if (error !== undefined) {
+            lastUpdate = error;
+        } else {
+            lastUpdate = settings.lastUpdate;
+            if (lastUpdate.getTime() === 0) {
+                lastUpdate = "never";
+            }
+        }
+
+        for (const element of document.getElementsByClassName("lastIndexUpdate")) {
+            element.innerText = lastUpdate;
+        }
+    };
+    refreshLastIndexUpdate();
+
+    const lastIndexUpdateCell = document.getElementById("lastIndexUpdateCell");
+    const handleScheduleIndexUpdates = async () => {
+        lastIndexUpdateCell.classList.remove("error");
+        lastIndexUpdateCell.classList.add("updating");
+
+        const { error } = await browser.runtime.sendMessage({ action: "scheduleIndexUpdates" });
+
+        lastIndexUpdateCell.classList.remove("updating");
+
+        if (error !== undefined) {
+            lastIndexUpdateCell.classList.add("error");
+            refreshLastIndexUpdate(`Failed to update indices: ${error}`);
+        } else {
+            refreshLastIndexUpdate();
+        }
+        return false;
+    };
+    const scheduleIndexUpdatesButton = document.getElementById("scheduleIndexUpdatesButton");
+    const scheduleIndexUpdatesText = document.getElementById("scheduleIndexUpdatesText");
+    scheduleIndexUpdatesButton.onclick = handleScheduleIndexUpdates;
+    scheduleIndexUpdatesText.onclick = handleScheduleIndexUpdates;
+
     const extensionVersion = `v${browser.runtime.getManifest().version}`;
     for (const element of document.getElementsByClassName("version")) {
         element.innerText = extensionVersion;

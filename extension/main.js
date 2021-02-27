@@ -125,6 +125,10 @@ const c = new Compat();
 
     const messageHandler = async ({ action, ...rest }, sender) => {
         switch (action) {
+            case "scheduleIndexUpdates":
+                return updateCommand.scheduleIndexUpdates(false)
+                    .then(lastUpdate => { return { lastUpdate }; })
+                    .catch(error => { return { error: error.message }; });
             default:
                 console.error(`Received message for unknown action '${action}'`);
                 return Promise.resolve({
