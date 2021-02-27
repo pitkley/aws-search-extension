@@ -122,4 +122,15 @@ const c = new Compat();
     });
 
     omnibox.addNoCacheQueries(COMMAND_PREFIX);
+
+    const messageHandler = async ({ action, ...rest }, sender) => {
+        switch (action) {
+            default:
+                console.error(`Received message for unknown action '${action}'`);
+                return Promise.resolve({
+                    error: "Unknown action",
+                });
+        }
+    };
+    browser.runtime.onMessage.addListener(messageHandler)
 })();
