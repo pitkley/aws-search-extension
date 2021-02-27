@@ -94,12 +94,12 @@ You can use the following kinds of search-queries:
     By default, the extension uses indices that are directly bundled with the extension itself.
     While this has the advantage that no network requests are made from the extension at all, this can lead to outdated indices.
 
-    While the extension will receive index-updates by publishing updated versions to the various extension stores relatively regularly (monthly to quarterly), you have to additional options for updating indices:
+    While the extension will receive index-updates by publishing updated versions to the various extension stores relatively regularly (monthly to quarterly), you have two additional options for updating indices:
 
     1. Trigger a manual index update.
 
-        Use your browser's omnibox, activate the AWS search extension (e.g. by typing `ase` followed by a space), then enter `!update`.
-        You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices where last updated:
+        Use your browser's omnibox, activate the AWS search extension (by typing `ase` followed by a space), then enter `!update`.
+        You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices were last updated:
 
         ![Triggering a manual update](docs/aes-command-update.png)
 
@@ -110,11 +110,13 @@ You can use the following kinds of search-queries:
 
     2. Enable automatic index updates.
 
-        You can enable automatic updates within the extension settings dialog, which youcan open by clicking on the AWS search extension icon in your browsers extension menu:
+        You can enable automatic updates within the extension settings dialog, which you can open by clicking on the AWS search extension icon in your browsers extension menu:
 
         ![Settings dialog for AWS search extension](docs/aes-settings.png)
 
-        Within the dialog you can also configure how often the extension should update the indices, the default is every 86400 seconds (i.e. 1 day).
+        Within the dialog you can also configure how often the extension should update the indices, the default for which is set to 86400 seconds (i.e. 1 day).
+        A one day interval is a sane default you shouldn't have to reduce since the index-sources are usually updated at most once per day.
+        (You can't set the update-interval lower than 1 hour.)
 
 * *What requests are being made for manual or automatic index updates?*
 
