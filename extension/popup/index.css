@@ -85,6 +85,15 @@ input#updateFrequencySecondsInput {
     max-width: 80px;
 }
 
+.update {
+    transition: 0.7s ease all;
+}
+.update.updating {
+    color: lightgray;
+}
+.update.error {
+    color: red;
+}
 
 /* Tooltip styling retrieved from https://www.w3schools.com/howto/howto_css_tooltip.asp */
 
@@ -93,9 +102,13 @@ input#updateFrequencySecondsInput {
     display: inline-block;
 }
 
+.tooltip.clickable {
+    cursor: pointer;
+}
+
 .tooltip .text {
     visibility: hidden;
-    width: 250px;
+    width: 200px;
     background-color: #555;
     color: #fff;
     text-align: center;
