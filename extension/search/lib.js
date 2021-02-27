@@ -25,10 +25,13 @@ class ServiceOrGlobalOperationSearcher {
     async updateIndexFromGithub() {
         // Retrieve pre-built JSON-index from GitHub.
         const response = await fetch(CONSTANTS.INDEX.forIndexId(this.indexId));
+        if (response.status >= 400) {
+            throw new Error(`Could not retrieve index file for ${this.indexId}-index, returned status: ${response.status} ${response.statusText}`)
+        }
         const indexData = await response.json();
 
         // Store the index in the extension-storage.
-        await browser.storage.local.set({[`index-${this.indexId}`]: indexData});
+        await browser.storage.local.set({ [`index-${this.indexId}`]: indexData });
 
         // Update the current searcher with the new index.
         this.updateFromRawIndex(indexData);
@@ -46,9 +49,9 @@ class ServiceOrGlobalOperationSearcher {
             if (!serviceCandidates) {
                 return [];
             }
-            return [...new Set(serviceCandidates.map(({serviceName}) => serviceName))].flatMap((serviceName) => {
+            return [...new Set(serviceCandidates.map(({ serviceName }) => serviceName))].flatMap((serviceName) => {
                 return this.services[serviceName].search(query);
-            }).sort(({operation: a}, {operation: b}) => lengthThenLexicographicSort(a, b));
+            }).sort(({ operation: a }, { operation: b }) => lengthThenLexicographicSort(a, b));
         }
     }
 
