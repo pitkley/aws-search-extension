@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "ajv-cli": "^5.0.0",
-    "vendor-copy": "^2.0.0",
+    "vendor-copy": "^3.0.1",
     "web-ext": "^6.0.0"
   },
   "scripts": {
