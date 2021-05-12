@@ -231,7 +231,7 @@ jobs:
             * Drag-and-drop the downloaded ZIP into the extensions-view.
 
     - name: 'Firefox (unlisted): upload signed extension to release'
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -240,7 +240,7 @@ jobs:
         asset_name: aws_search_extension-firefox-${{ steps.tag.outputs.value }}.xpi
         asset_content_type: application/zip
     - name: 'Chrome: upload extension to release'
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -249,7 +249,7 @@ jobs:
         asset_name: aws_search_extension-chrome-${{ steps.tag.outputs.value }}.zip
         asset_content_type: application/zip
     - name: 'Edge: upload extension to release'
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
