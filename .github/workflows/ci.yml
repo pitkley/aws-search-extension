@@ -45,7 +45,7 @@ jobs:
       with:
         node-version: '12'
     - name: Install Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v2.2.2
       with:
         python-version: '^3.9'
     - name: Install Go
