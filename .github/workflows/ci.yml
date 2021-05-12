@@ -144,7 +144,7 @@ jobs:
     - name: 'Firefox: prepare manifest'
       run: make firefox
     - name: 'Firefox: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-firefox
       with:
         cmd: build
@@ -154,7 +154,7 @@ jobs:
     - name: 'Chrome: prepare manifest'
       run: make chrome
     - name: 'Chrome: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-chrome
       with:
         cmd: build
@@ -164,7 +164,7 @@ jobs:
     - name: 'Edge: prepare manifest'
       run: make edge
     - name: 'Edge: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-edge
       with:
         cmd: build

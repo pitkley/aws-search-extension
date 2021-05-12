@@ -119,7 +119,7 @@ jobs:
     - name: 'Firefox: prepare manifest'
       run: make firefox
     - name: 'Firefox: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-firefox
       with:
         cmd: build
@@ -128,7 +128,7 @@ jobs:
     - name: 'Firefox (unlisted): prepare manifest'
       run: make firefox.unlisted
     - name: 'Firefox (unlisted): web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-firefox-unlisted
       with:
         cmd: build
@@ -137,7 +137,7 @@ jobs:
 
     - name: 'Firefox (unlisted): web-ext sign'
       id: web-ext-sign-firefox-unlisted
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       with:
         cmd: sign
         source: ${{ steps.web-ext-build-firefox-unlisted.outputs.target }}
@@ -150,7 +150,7 @@ jobs:
     - name: 'Chrome: prepare manifest'
       run: make chrome
     - name: 'Chrome: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-chrome
       with:
         cmd: build
@@ -160,7 +160,7 @@ jobs:
     - name: 'Edge: prepare manifest'
       run: make edge
     - name: 'Edge: web-ext build'
-      uses: kewisch/action-web-ext@v1
+      uses: kewisch/action-web-ext@v1.0.1
       id: web-ext-build-edge
       with:
         cmd: build
