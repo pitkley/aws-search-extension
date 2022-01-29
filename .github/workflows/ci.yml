@@ -114,8 +114,8 @@ jobs:
       if: steps.cache-awscli.outputs.cache-hit != 'true'
       run: |
         node_modules/.bin/ajv validate \
-          -s hack/index-schemas/api.schema.json \
-          -d json-indices/api.json
+          -s hack/index-schemas/cli.schema.json \
+          -d json-indices/cli.json
 
     - name: 'aws-cloudformation-user-guide: Generate index'
       if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
@@ -138,8 +138,8 @@ jobs:
       if: steps.cache-botocore.outputs.cache-hit != 'true'
       run: |
         node_modules/.bin/ajv validate \
-          -s hack/index-schemas/cli.schema.json \
-          -d json-indices/cli.json
+          -s hack/index-schemas/api.schema.json \
+          -d json-indices/api.json
 
     - name: 'Firefox: prepare manifest'
       run: make firefox
