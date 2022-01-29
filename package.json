@@ -5,13 +5,13 @@
   "author": "Pit Kleyersburg <pitkley@googlemail.com",
   "license": "Apache-2.0/MIT",
   "dependencies": {
-    "fuzzy-search": "^3.2.1",
-    "webextension-polyfill": "^0.8.0"
+    "fuzzy-search": "3.2.1",
+    "webextension-polyfill": "0.8.0"
   },
   "devDependencies": {
-    "ajv-cli": "^5.0.0",
-    "vendor-copy": "^3.0.1",
-    "web-ext": "^6.6.0"
+    "ajv-cli": "5.0.0",
+    "vendor-copy": "3.0.1",
+    "web-ext": "6.6.0"
   },
   "scripts": {
     "postinstall": "vendor-copy",

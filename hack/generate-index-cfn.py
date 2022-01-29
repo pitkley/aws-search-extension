@@ -13,6 +13,7 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum, auto
+from itertools import chain
 from pathlib import Path
 from typing import Optional
 
@@ -57,12 +58,13 @@ def process_path(path: Path) -> Optional[IndexItem]:
 
 def main(
     cfn_docs_root: Path,
+    sam_docs_root: Path,
     *,
     export_as_json: bool,
 ):
     # Generate the internal index representation for the available files
     index = defaultdict(list)
-    for path in cfn_docs_root.iterdir():
+    for path in chain(cfn_docs_root.iterdir(), sam_docs_root.iterdir()):
         if not path.is_file():
             continue
         index_item = process_path(path)
@@ -96,8 +98,11 @@ def main(
     index_file.parent.mkdir(exist_ok=True)
     with index_file.open("w") as fh:
         if not export_as_json:
-            fh.write("// Descriptions retrieved from: https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
-            fh.write("// They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
+            fh.write("// Descriptions retrieved from:\n")
+            fh.write("// - https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
+            fh.write("//   They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
+            fh.write("// - https://github.com/awsdocs/aws-sam-developer-guide/\n")
+            fh.write("// They are licensed under the Apache License 2.0, copyright Amazon Web Services, Inc.\n")
             fh.write("var cfnSearchIndex={\n")
         else:
             fh.write("{\n")
@@ -120,5 +125,6 @@ if __name__ == '__main__':
     export_as_json = "--export-as-json" in sys.argv
     main(
         Path("index-sources/aws-cloudformation-user-guide/doc_source"),
+        Path("index-sources/aws-sam-developer-guide/doc_source"),
         export_as_json=export_as_json,
     )

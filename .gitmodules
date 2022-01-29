@@ -10,3 +10,6 @@
 [submodule "index-sources/aws-cli"]
 	path = index-sources/aws-cli
 	url = https://github.com/aws/aws-cli
+[submodule "index-sources/aws-sam-developer-guide"]
+	path = index-sources/aws-sam-developer-guide
+	url = https://github.com/awsdocs/aws-sam-developer-guide
