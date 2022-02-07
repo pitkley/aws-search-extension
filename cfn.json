@@ -3499,7 +3499,7 @@
   "AWS::SES::ReceiptRuleSet":["aws-resource-ses-receiptruleset", "Creates an empty receipt rule set."],
   "AWS::SES::Template":["aws-resource-ses-template", "Specifies an email template. Email templates enable you to send personalized email to one or more destinations in a single API operation."],
   "AWS::SES::Template Template":["aws-properties-ses-template-template", "The content of the email, composed of a subject line, an HTML part, and a text-only part."],
-  "AWS::SNS::Subscription":["aws-resource-sns-subscription", "The `AWS::SNS::Subscription` resource subscribes an endpoint to an Amazon SNS topic. For a subscription to be created, the owner of the endpoint must confirm the subscription."],
+  "AWS::SNS::Subscription":["aws-resource-sns-subscription", "The `AWS::SNS::Subscription` resource subscribes an endpoint to an Amazon SNS topic. If the endpoint type is HTTP/S or email, or if the endpoint and the topic are not in the same Amazon Web Services account, the owner of the endpoint must confirm the subscription."],
   "AWS::SNS::Topic":["aws-properties-sns-topic", "The `AWS::SNS::Topic` resource creates a topic to which notifications can be published."],
   "AWS::SNS::Topic Subscription":["aws-properties-sns-subscription", "`Subscription` is an embedded property that describes the subscription endpoints of an Amazon SNS topic."],
   "AWS::SNS::TopicPolicy":["aws-properties-sns-policy", "The `AWS::SNS::TopicPolicy` resource associates Amazon SNS topics with a policy. For an example snippet, see [Declaring an Amazon SNS policy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-iam.html#scenario-sns-policy) in the *AWS CloudFormation User Guide*."],
