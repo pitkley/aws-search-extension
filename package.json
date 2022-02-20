@@ -1,6 +1,6 @@
 {
   "name": "aws-search-extension",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "A search-extension for quick, fuzzy-search results for AWS developers!",
   "author": "Pit Kleyersburg <pitkley@googlemail.com",
   "license": "Apache-2.0/MIT",
