@@ -24,13 +24,13 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix                                | Description                                              |
-| ------------------------------------- | -------------------------------------------------------- |
-| *(no prefix)* or `/`                  | Search all API references                                |
-| `<service>/`                          | Search the API references for the matching services.     |
-| `@`                                   | Search all aws-cli references                            |
-| `<service>@`                          | Search the aws-cli references for the matching services. |
-| `:` *(or `::` anywhere in the query)* | Search the AWS CloudFormation documentation              |
+| Prefix                                | Description                                               |
+| ------------------------------------- |-----------------------------------------------------------|
+| *(no prefix)* or `/`                  | Search all API references.                                |
+| `<service>/`                          | Search the API references for the matching services.      |
+| `@`                                   | Search all aws-cli references.                            |
+| `<service>@`                          | Search the aws-cli references for the matching services.  |
+| `:` *(or `::` anywhere in the query)* | Search the AWS CloudFormation and AWS SAM documentations. |
 
 ### Example queries
 
@@ -64,7 +64,7 @@ You can use the following kinds of search-queries:
 
     ![Example suggestions for query `elbv2@wait`](docs/cli-elbv2-wait.png)
 
- * `data@job`
+* `data@job`
 
     Searches CLI-operations matching `job` in all services matching `data`.
 
@@ -72,15 +72,19 @@ You can use the following kinds of search-queries:
 
 * `a::e::instance`
 
-    Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
 
     ![Example suggestions for query `a::e::instance`](docs/cfn-aeinstance.png)
 
 * `:findinmap`
 
-    Fuzzy-searches the AWS CloudFormation documentation for the matching documentation for `Fn::FindInMap`.
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for the matching documentation for `Fn::FindInMap`.
 
     ![Example suggestions for query `findinmap`](docs/cfn-findinmap.png)
+
+* `a::serverless:function`
+
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for the matching documentation for `AWS::Serverless::Function`.
 
 ## FAQ
 
