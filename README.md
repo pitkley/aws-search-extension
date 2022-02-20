@@ -15,8 +15,8 @@ You can find detailed information on how to structure your queries in the sectio
 ## Privacy
 
 The AWS search extension computes all search-suggestions locally and never sends your queries, or any other data, to any external server!
-By default it also doesn't retrieve any data from any servers, the indices it uses are included with the extension when it is installed.
-(You can enable automatic index updates, see below for more information.)
+Please note that it does retrieve the indices supporting the local search-suggestions by default once per day (given you perform a search).
+If you are not comfortable with this, you can opt out of automatic index updates in the extension's configuration, see below for more information.
 
 Please note that the extension **can not** guarantee that your browser doesn't collect any data for the queries you enter into its omnibox.
 
@@ -24,13 +24,13 @@ Please note that the extension **can not** guarantee that your browser doesn't c
 
 You can use the following kinds of search-queries:
 
-| Prefix                                | Description                                              |
-| ------------------------------------- | -------------------------------------------------------- |
-| *(no prefix)* or `/`                  | Search all API references                                |
-| `<service>/`                          | Search the API references for the matching services.     |
-| `@`                                   | Search all aws-cli references                            |
-| `<service>@`                          | Search the aws-cli references for the matching services. |
-| `:` *(or `::` anywhere in the query)* | Search the AWS CloudFormation documentation              |
+| Prefix                                | Description                                               |
+| ------------------------------------- |-----------------------------------------------------------|
+| *(no prefix)* or `/`                  | Search all API references.                                |
+| `<service>/`                          | Search the API references for the matching services.      |
+| `@`                                   | Search all aws-cli references.                            |
+| `<service>@`                          | Search the aws-cli references for the matching services.  |
+| `:` *(or `::` anywhere in the query)* | Search the AWS CloudFormation and AWS SAM documentations. |
 
 ### Example queries
 
@@ -64,7 +64,7 @@ You can use the following kinds of search-queries:
 
     ![Example suggestions for query `elbv2@wait`](docs/cli-elbv2-wait.png)
 
- * `data@job`
+* `data@job`
 
     Searches CLI-operations matching `job` in all services matching `data`.
 
@@ -72,56 +72,55 @@ You can use the following kinds of search-queries:
 
 * `a::e::instance`
 
-    Fuzzy-searches the AWS CloudFormation documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for matching resources, in this case `AWS::EC2::Instance` should be the top match.
 
     ![Example suggestions for query `a::e::instance`](docs/cfn-aeinstance.png)
 
 * `:findinmap`
 
-    Fuzzy-searches the AWS CloudFormation documentation for the matching documentation for `Fn::FindInMap`.
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for the matching documentation for `Fn::FindInMap`.
 
     ![Example suggestions for query `findinmap`](docs/cfn-findinmap.png)
+
+* `a::serverless:function`
+
+    Fuzzy-searches the combined AWS CloudFormation and AWS SAM documentation for the matching documentation for `AWS::Serverless::Function`.
 
 ## FAQ
 
 * *How are the results computed so fast?*
 
     The extension uses pre-built indices to support a fast search.
-    The indices contain just enough data to be useful to the users (it contains summaries for all results), but not too much to slow down the search.
+    The indices contain just enough data to be useful to the users, but not too much to slow down the search.
 
 * *How are the indices updated?*
 
-    By default, the extension uses indices that are directly bundled with the extension itself.
-    While this has the advantage that no network requests are made from the extension at all, this can lead to outdated indices.
+    By default, the extension will update the indices used for search-suggestions once per day (specifically after a search has been performed).
 
-    While the extension will receive index-updates by publishing updated versions to the various extension stores relatively regularly (monthly to quarterly), you have two additional options for updating indices:
+    If you don't want the extension to perform any outgoing requests, you can disable the automatic index updates in the extension settings dialog, which you can open by clicking on the AWS search extension icon in your browser's extension menu:
 
-    1. Trigger a manual index update.
+    ![Settings dialog for AWS search extension](docs/aes-settings.png)
 
-        Open the AWS search extension popup, then click on the "Update now" button to get the latest indices.
+    Within the dialog you can also configure how often the extension should update the indices, the default for which is set to 86400 seconds (i.e. 1 day).
+    A one-day interval is a sane default you shouldn't have to reduce, since the index-sources are usually updated at most once per day.
+    (You can't set the update-interval lower than 1 hour.)
 
-        ![Triggering a manual update through the popup](docs/aes-popup-update.png)
+    Please note that disabling the automatic index updates will obviously lead to the indices becoming outdated, and only receiving updates whenever the extension itself is updated (which currently only happens if features are added or bugs are fixed).
 
-        The timestamp for the last update will be shown as grey while the extension is updating the indices (which, depending on your internet connection, should not take more than 1-3 seconds) and then automatically update to the current timestamp once the update has finished successfully.
+    You also have the option to manually update the indices through the settings popup, which you can open by clicking on the AWS search extension icon in your browser's extension menu:
 
-        Alternatively you can also use your browser's omnibox to trigger an update.
-        Activate the AWS search extension (by typing `ase` followed by a space), then enter `!update`.
-        You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices were last updated:
+    ![Triggering a manual update through the popup](docs/aes-popup-update.png)
 
-        ![Triggering a manual update through the omnibox](docs/aes-command-update.png)
+    The timestamp for the last update will be shown as grey while the extension is updating the indices (which, depending on your internet connection, should not take more than 1-3 seconds) and then automatically update to the current timestamp once the update has finished successfully.
 
-        Updates triggered through the omnibox will execute in the background and will usually finish in a few seconds.
-        Please note that you will not get further feedback on the status of the update if you trigger it through the omnibox.
+    Alternatively you can also use your browser's omnibox to trigger an update.
+    Activate the AWS search extension (by typing `ase` followed by a space), then enter `!update`.
+    You will see a result informing you to hit "Enter" to trigger an index update, and it also informs you when the indices were last updated:
 
-    2. Enable automatic index updates.
+    ![Triggering a manual update through the omnibox](docs/aes-command-update.png)
 
-        You can enable automatic updates within the extension settings dialog, which you can open by clicking on the AWS search extension icon in your browsers extension menu:
-
-        ![Settings dialog for AWS search extension](docs/aes-settings.png)
-
-        Within the dialog you can also configure how often the extension should update the indices, the default for which is set to 86400 seconds (i.e. 1 day).
-        A one day interval is a sane default you shouldn't have to reduce since the index-sources are usually updated at most once per day.
-        (You can't set the update-interval lower than 1 hour.)
+    Updates triggered through the omnibox will execute in the background and will usually finish in a few seconds.
+    Please note that you will not get further feedback on the status of the update if you trigger it through the omnibox.
 
 * *What requests are being made for manual or automatic index updates?*
 

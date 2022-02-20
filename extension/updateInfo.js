@@ -39,11 +39,20 @@ const extensionUpdated = async ({ currentVersion, previousVersion }) => {
         await browser.tabs.create({
             url: browser.extension.getURL("popup/updates/post-0.3.x.html"),
         });
+        return;
+    }
+    // Update from 0.4.x -> notify about automatic index updates, SAM-support and full release
+    if (previousMajor === 0 && previousMinor === 4 &&
+        (currentMajor > previousMajor || currentMinor > previousMinor)) {
+        await browser.tabs.create({
+            url: browser.extension.getURL("popup/updates/post-0.4.x.html"),
+        });
+        return;
     }
 };
 
 const installListener = async ({ previousVersion, reason }) => {
-    if (reason != "update" || previousVersion === undefined)
+    if (reason !== "update" || previousVersion === undefined)
         return;
 
     const currentVersion = browser.runtime.getManifest().version;

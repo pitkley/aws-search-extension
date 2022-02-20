@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3
 
 # Copyright Pit Kleyersburg <pitkley@googlemail.com>
 #
@@ -28,9 +28,10 @@ class IndexItem:
     name: str
     path: Path
     description: str
+    source: str
 
 
-def process_path(path: Path) -> Optional[IndexItem]:
+def process_path(path: Path, source: str) -> Optional[IndexItem]:
     with open(path, "r") as fh:
         parse_state = State.ITEM
         item = None
@@ -53,7 +54,7 @@ def process_path(path: Path) -> Optional[IndexItem]:
             if item is None:
                 return None
             description = item
-    return IndexItem(name=item, path=path, description=description)
+    return IndexItem(name=item, path=path, description=description, source=source)
 
 
 def main(
@@ -64,10 +65,17 @@ def main(
 ):
     # Generate the internal index representation for the available files
     index = defaultdict(list)
-    for path in chain(cfn_docs_root.iterdir(), sam_docs_root.iterdir()):
+    for path in cfn_docs_root.iterdir():
         if not path.is_file():
             continue
-        index_item = process_path(path)
+        index_item = process_path(path, "cfn")
+        if not index_item:
+            continue
+        index[index_item.name].append(index_item)
+    for path in sam_docs_root.iterdir():
+        if not path.is_file():
+            continue
+        index_item = process_path(path, "sam")
         if not index_item:
             continue
         index[index_item.name].append(index_item)
@@ -82,6 +90,7 @@ def main(
             final_index[key] = [
                 index_item.path.stem,
                 index_item.description,
+                index_item.source,
             ]
         else:
             # We have two or more items that share the same name. To be able to show all of them, we add their filename
@@ -91,6 +100,7 @@ def main(
                 final_index[compound_key] = [
                     index_item.path.stem,
                     index_item.description,
+                    index_item.source,
                 ]
 
     # Persist the final-index to the extension
@@ -122,6 +132,9 @@ def main(
 
 
 if __name__ == '__main__':
+    if sys.version_info.major < 3 or (sys.version_info.major == 3 and sys.version_info.minor <= 9):
+        sys.exit("Python 3.9+ required")
+
     export_as_json = "--export-as-json" in sys.argv
     main(
         Path("index-sources/aws-cloudformation-user-guide/doc_source"),

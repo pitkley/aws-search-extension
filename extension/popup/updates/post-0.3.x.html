@@ -53,7 +53,7 @@
         </p>
         <ul>
             <li>
-                <code>a::e::instance</code> will match because it has to consecutive colons in the
+                <code>a::e::instance</code> will match because it has two consecutive colons in the
                 query. It should show <code>AWS::EC2::Instance</code> as the first result.
             </li>
             <li>
@@ -95,6 +95,59 @@
             </tbody>
         </table>
     </article>
+    <article>
+        <h3>Automatic index updates are now enabled by default</h3>
+        <p>
+            In previous versions of the AWS search extension, automatic updates of the bundled
+            indices were disabled by default, although you could always enable them in the
+            extension's configuration. Starting with version 1.0.0, automatic updates are now
+            enabled by default!
+        </p>
+        <p>
+            You can see and update your current configuration here:
+        </p>
+        <table style="border: 1px solid black; margin: auto; width: 60%;">
+            <colgroup>
+                <col span="1" style="width: 80%;">
+                <col span="1" style="width: 20%;">
+            </colgroup>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="tooltip">
+                        <label for="autoUpdateCheckbox">
+                            Enable automatic index updates
+                            &#9432;
+                        </label>
+                        <span class="text">
+                            When enabled, the extension will regularly (by default once a day)
+                            retrieve the latest indices automatically. The indices are retrieved
+                            from GitHub via
+                            <code>raw.githubusercontent.com/pitkley/aws-search-extension</code>.
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" id="autoUpdateCheckbox"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p>
+            This setting <b>is remembered</b> when the extension is updated, i.e. you do not have to
+            disable the automatic index updates on every extension update if you don't want them to
+            be enabled.
+        </p>
+        <p>
+            <em>
+                Please note that this was done to improve the experience and to reduce confusion for
+                new users. You can still disable the automatic updates in the configuration or
+                directly above. Please also note that this does not change the extension's stance on
+                your privacy: getting updated indices is still the only time the extension performs
+                any requests on your behalf; no data is collected at any given point!
+            </em>
+        </p>
+    </article>
 </section>
 <section>
     <h2>Further information</h2>
@@ -120,6 +173,7 @@
     </p>
 </section>
 <script src="../../vendored/webextension-polyfill/browser-polyfill.min.js" type="text/javascript"></script>
+<script src="../../settings.js" type="text/javascript"></script>
 <script src="updates.js" type="text/javascript"></script>
 </body>
 </html>
