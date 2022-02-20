@@ -1,0 +1,159 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body>
+<header>
+    <img src="../../logo.png"/>
+    <h1>AWS search extension - Updated</h1>
+</header>
+<section>
+    <h2>Changes</h2>
+    <article>
+        <h3>Automatic index updates are now enabled by default</h3>
+        <p>
+            In previous versions of the AWS search extension, automatic updates of the bundled
+            indices were disabled by default, although you could always enable them in the
+            extension's configuration. Starting with version 1.0.0, automatic updates are now
+            enabled by default!
+        </p>
+        <p>
+            You can see and update your current configuration here:
+        </p>
+        <table style="border: 1px solid black; margin: auto; width: 60%;">
+            <colgroup>
+                <col span="1" style="width: 80%;">
+                <col span="1" style="width: 20%;">
+            </colgroup>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="tooltip">
+                        <label for="autoUpdateCheckbox">
+                            Enable automatic index updates
+                            &#9432;
+                        </label>
+                        <span class="text">
+                            When enabled, the extension will regularly (by default once a day)
+                            retrieve the latest indices automatically. The indices are retrieved
+                            from GitHub via
+                            <code>raw.githubusercontent.com/pitkley/aws-search-extension</code>.
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <input type="checkbox" id="autoUpdateCheckbox"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p>
+            This setting <b>is remembered</b> when the extension is updated, i.e. you do not have to
+            disable the automatic index updates on every extension update if you don't want them to
+            be enabled.
+        </p>
+        <p>
+            <em>
+                Please note that this was done to improve the experience and to reduce confusion for
+                new users. You can still disable the automatic updates in the configuration or
+                directly above. Please also note that this does not change the extension's stance on
+                your privacy: getting updated indices is still the only time the extension performs
+                any requests on your behalf; no data is collected at any given point!
+            </em>
+        </p>
+    </article>
+    <article>
+        <h3>Added support for AWS SAM template-resources and CLI docs</h3>
+        <p>
+            Searches for AWS CloudFormation resources now also yield AWS SAM resources (such as
+            <code>AWS::Serverless:Function</code>) and the SAM-CLI docs (such as
+            <code>sam init</code>). They are directly integrated with the CloudFormation
+            search-results, so just using the same query types as for CloudFormation will now also
+            show you the AWS SAM resources.
+        </p>
+        <p>
+            Examples:
+        </p>
+        <ul>
+            <li>
+                <code>a::serverless::function</code> will show
+                <code>AWS::Serverless::Function</code> as the first result.
+            </li>
+            <li>
+                <code>:sam</code> will show you the SAM-CLI documentation matches, such as
+                <code>sam init</code>.
+            </li>
+        </ul>
+    </article>
+    <article>
+        <h3>Released as v1.0.0</h3>
+        <p>
+            Given the extension's maturity, AWS search extension has now been released as version
+            1.0.0. There have been no breaking changes since version 0.4.x, and all other new
+            features and changes are shown above.
+        </p>
+    </article>
+</section>
+<section>
+    <h2>Further information</h2>
+    <article>
+        <p>
+            AWS search extension is a browser-extension compatible with Google Chrome, Mozilla
+            Firefox and Microsoft Edge (and probably most Chromium-based browsers). It provides
+            search results for AWS API references and the AWS CloudFormation reference, and opens
+            the official AWS documentation page when you select an item by pressing Enter.
+        </p>
+        <ul>
+            <li><a href="https://github.com/pitkley/aws-search-extension">Official repository (github.com)</a></li>
+            <li><a href="https://github.com/pitkley/aws-search-extension/issues/new">Report an issue (github.com)</a>
+            </li>
+        </ul>
+        <p>
+            You can search through the following references using the following prefixes:
+        </p>
+        <table>
+            <thead>
+            <tr>
+                <td>Prefix</td>
+                <td>Description</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><em>(no prefix)</em> or <code>/</code></td>
+                <td>Search all API references.</td>
+            </tr>
+            <tr>
+                <td><code>&lt;service&gt;/</code></td>
+                <td>Search the API references for the matching services.</td>
+            </tr>
+            <tr>
+                <td><code>@</code></td>
+                <td>Search all aws-cli references.</td>
+            </tr>
+            <tr>
+                <td><code>&lt;service&gt;@</code></td>
+                <td>Search the aws-cli references for the matching services.</td>
+            </tr>
+            <tr>
+                <td><code>:</code> <em>(or <code>::</code> anywhere in the query)</em></td>
+                <td>Search the AWS CloudFormation and AWS SAM documentations.</td>
+            </tr>
+            </tbody>
+        </table>
+    </article>
+</section>
+<section class="affiliation">
+    <h2>Affiliation</h2>
+    <p>
+        The AWS search extension has no official affiliation with Amazon Web Services, Inc.,
+        Amazon.com, Inc., or any of its affiliates. Amazon Web Services is a trademark of
+        Amazon.com, Inc. or its affiliates in the United States and/or other countries.
+    </p>
+</section>
+<script src="../../vendored/webextension-polyfill/browser-polyfill.min.js" type="text/javascript"></script>
+<script src="../../settings.js" type="text/javascript"></script>
+<script src="updates.js" type="text/javascript"></script>
+</body>
+</html>
