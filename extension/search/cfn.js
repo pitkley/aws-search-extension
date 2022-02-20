@@ -12,11 +12,12 @@ class CfnSearcher {
     }
 
     static processRawIndex(rawIndex) {
-        const index = Object.entries(rawIndex).map(([name, [path, description]]) => {
+        const index = Object.entries(rawIndex).map(([name, [path, description, source]]) => {
             return {
                 name,
                 path,
                 description,
+                source,
             };
         }).sort(({name: a}, {name: b}) => lengthThenLexicographicSort(a, b));
         const searcher = new FuzzySearch(
@@ -54,9 +55,19 @@ class CfnSearcher {
     }
 
     format(index, doc) {
+        let content;
+        let description = `${c.match(c.escape(doc.name))} - ${c.dim(c.escape(doc.description))}`;
+        if (doc.source === "sam") {
+            content = `https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/${doc.path}.html`;
+            description = "[SAM] " + description;
+        } else {
+            content = `https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/${doc.path}.html`;
+            description = "[CFN] " + description;
+        }
+
         return {
-            content: `https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/${doc.path}.html`,
-            description: `[CFN] ${c.match(c.escape(doc.name))} - ${c.dim(c.escape(doc.description))}`,
+            content,
+            description,
         };
     }
 
