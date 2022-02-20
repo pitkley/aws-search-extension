@@ -8,7 +8,8 @@
 
 const settings = {
     get autoUpdate() {
-        return localStorage.getItem("autoUpdate") === "true";
+        const autoUpdate = localStorage.getItem("autoUpdate");
+        return autoUpdate === null || autoUpdate === "true";
     },
     set autoUpdate(update) {
         localStorage.setItem("autoUpdate", update);
