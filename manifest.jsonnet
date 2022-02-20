@@ -15,7 +15,7 @@ local json = manifest.new(
   name='AWS Search Extension',
   version='%s%s' % [packageJson.version, fragmentVersionSuffix],
   keyword='ase',
-  description='A search-extension for quick, fuzzy-search results for AWS developers!',
+  description=packageJson.description,
 )
              .addIcons(icons())
              .addPermissions(['storage', 'unlimitedStorage'])
@@ -26,7 +26,8 @@ local json = manifest.new(
              .addBackgroundScripts(utils.js_files('search', ['lib']))
              .addBackgroundScripts(utils.js_files('index', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn', 'cli']))
-             .addBackgroundScripts(['main.js']);
+             .addBackgroundScripts(['main.js'])
+             .addBrowserAction('popup/index.html', packageJson.description);
 
 local browser = std.extVar('browser');
 if browser == 'firefox' then
