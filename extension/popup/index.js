@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         lastIndexUpdateCell.classList.remove("error");
         lastIndexUpdateCell.classList.add("updating");
 
-        const { error } = await browser.runtime.sendMessage({ action: "scheduleIndexUpdates" });
+        const {error} = await browser.runtime.sendMessage({action: "scheduleIndexUpdates"});
 
         lastIndexUpdateCell.classList.remove("updating");
 
@@ -62,4 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const element of document.getElementsByClassName("version")) {
         element.innerText = extensionVersion;
     }
+
+    window.addEventListener("storage", function () {
+        autoUpdateCheckbox.checked = settings.autoUpdate;
+        updateFrequencySecondsInput.value = settings.updateFrequencySeconds;
+    });
 });
