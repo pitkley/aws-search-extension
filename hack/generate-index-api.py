@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3
 
 # Copyright Pit Kleyersburg <pitkley@googlemail.com>
 #
@@ -154,6 +154,9 @@ def main(
 
 
 if __name__ == '__main__':
+    if sys.version_info.major < 3 or (sys.version_info.major == 3 and sys.version_info.minor <= 9):
+        sys.exit("Python 3.9+ required")
+
     export_as_json = "--export-as-json" in sys.argv
     main(
         Path("index-sources/botocore/botocore/data/"),
