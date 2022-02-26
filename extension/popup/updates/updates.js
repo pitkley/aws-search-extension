@@ -9,6 +9,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const h1 = document.getElementsByTagName("h1")[0];
     h1.innerText += ` to v${browser.runtime.getManifest().version}`;
+    const changesH2 = document.querySelector("h2#changes");
+    if (changesH2 != null) {
+        changesH2.innerText += ` in v${browser.runtime.getManifest().version}`;
+    }
 
     const autoUpdateCheckbox = document.getElementById("autoUpdateCheckbox");
     if (autoUpdateCheckbox !== null) {

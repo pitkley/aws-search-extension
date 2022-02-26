@@ -18,8 +18,8 @@ const semver = (version) => {
     };
 }
 
-const extensionUpdated = async ({ currentVersion, previousVersion }) => {
-    if (currentVersion == previousVersion)
+const extensionUpdated = async ({currentVersion, previousVersion}) => {
+    if (currentVersion === previousVersion)
         return;
 
     const {
@@ -49,9 +49,17 @@ const extensionUpdated = async ({ currentVersion, previousVersion }) => {
         });
         return;
     }
+    // Update from 1.0.0 -> notify about removal of permission
+    if (previousMajor === 1 && previousMinor === 0 && previousPatch === 0 &&
+        (currentMajor > previousMajor || currentMinor > previousMinor || currentPatch > previousPatch)) {
+        await browser.tabs.create({
+            url: browser.extension.getURL("popup/updates/post-1.0.0.html"),
+        });
+        return;
+    }
 };
 
-const installListener = async ({ previousVersion, reason }) => {
+const installListener = async ({previousVersion, reason}) => {
     if (reason !== "update" || previousVersion === undefined)
         return;
 
