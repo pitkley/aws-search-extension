@@ -86,7 +86,7 @@ jobs:
       with:
         path: |
           extension/index/cfn.js
-          json-indices/cfn.js
+          json-indices/cfn.json
         key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
@@ -184,6 +184,7 @@ jobs:
       with:
         name: indices
         path: |
+          extension/index/*.js
           json-indices/*.json
 
   commit-indices:
