@@ -27,7 +27,12 @@ local json = manifest.new(
              .addBackgroundScripts(utils.js_files('index', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(['main.js'])
-             .addBrowserAction('popup/index.html', packageJson.description);
+             .addBrowserAction('popup/index.html', packageJson.description) {
+               # NOTE: we overwrite the permissions here because `core/manifest.libsonnet` defines the `tab` permission
+               #       by default, which is not necessary for the funcionality of the extension. We can remove this
+               #       workaround once core does not prepopulate this.
+               permissions: ['storage', 'unlimitedStorage'],
+             };
 
 local browser = std.extVar('browser');
 if browser == 'firefox' then
