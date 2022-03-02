@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Check license headers
       run: |
         ./hack/check-license-headers.sh
@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: yamllint
       uses: ibiqlik/action-yamllint@v3
 
@@ -55,7 +55,7 @@ jobs:
     - name: Install jsonnet
       run: go get github.com/google/go-jsonnet/cmd/jsonnet
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -195,7 +195,7 @@ jobs:
 
     steps:
     - name: Checkout indices branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         ref: indices
     - name: Retrieve indices
