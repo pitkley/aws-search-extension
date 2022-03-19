@@ -14,11 +14,11 @@ jobs:
 
     steps:
     - name: Install node toolchain
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '12'
     - name: Install Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '^3.9'
     - name: Install Go
@@ -28,7 +28,7 @@ jobs:
     - name: Install jsonnet
       run: go get github.com/google/go-jsonnet/cmd/jsonnet
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
 
