@@ -49,5 +49,9 @@ else if browser == 'chrome' then
   json {
     key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqcanHEBpM8ZQG+zY2Xy+nyu5XiRjqSrFH+rutHxeyEqswA4KYNH9FFEgjy3On2+W2udY0CJzaBMgC6nPH2nFzdVGfc2CK+0wgLjYAkQjnzTd/0jFriZrSH5S8fXJOFoEZRz3wbHX3rfOI4FpbtjCMCwDQITBgqCcF1BzFRHBDQdwv2WviJUHbuPkVO7QaeTJ4tWi0E5+rVHPhkHpf/zerAn275xqbR/jY3rGrlP6OTOApvjd0pSKXoznuoSKjp6Ma0O8o1aQgZD9JHRHKr7OHmqZKx7MZImHOw0JOopytkR5dfsuM1pU1xYUuHNUgjLDfeeX2N2Z0cBZlC8bt8Wv+QIDAQAB'
   }
+else if browser == 'edge' then
+  json {
+    key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvtgDNu7iNBinC4GEgTqfOlJodb2AS32WS7yHaRuzZDFglG/7ZGhsN3O8hWLTLI+NuCCRgTz4PACsN58A2GcNjbE3P3ei2rCaTiIibwRCz9WLBHATtntUe0DIFPpl+0Gax5r/hy10mhiiD1/RcqHUMk9qEl3URqgRbIz8bXoGSP4FeeFtvGjm9JvuteU8UslEfhM6atuZF82JouIkYmB2Ag7Ey3yXgUlxAkJLhjHXo0bLurwsDdol5xLHzfgPMzWXdUt/oD+jz79kb8A/VECzjaDbYpjDrI064m55xWHZkayo23HylLEZgbumkS0ZUzoMkCikPSEkDrWyyPfdlWRG4QIDAQAB'
+  }
 else
   json
