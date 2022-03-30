@@ -202,6 +202,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: indices
+    - name: Move downloaded indices
+      run: |
+        rm -rf extension/ || :
+        mv json-indices/*.json .
+        rmdir json-indices/
     - name: Commit updated index
       run: |
         function git_commit {
