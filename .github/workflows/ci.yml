@@ -49,7 +49,7 @@ jobs:
       with:
         python-version: '^3.9'
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.15.x
     - name: Install jsonnet
@@ -172,7 +172,7 @@ jobs:
         artifacts: web-ext-artifacts/edge/
 
     - name: Upload extension-ZIPs as artifact to workflow
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: aws-search-extension
         path: |
@@ -180,7 +180,7 @@ jobs:
           ${{ steps.web-ext-build-chrome.outputs.target }}
           ${{ steps.web-ext-build-edge.outputs.target }}
     - name: Upload JSON-indices as artifact to workflow
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: indices
         path: |
@@ -199,7 +199,7 @@ jobs:
       with:
         ref: indices
     - name: Retrieve indices
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: indices
     - name: Move downloaded indices
