@@ -6,6 +6,8 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global settings */
+
 document.addEventListener("DOMContentLoaded", function () {
     const autoUpdateCheckbox = document.getElementById("autoUpdateCheckbox");
     autoUpdateCheckbox.checked = settings.autoUpdate;

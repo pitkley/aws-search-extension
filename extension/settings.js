@@ -6,6 +6,7 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* exported settings */
 const settings = {
     get autoUpdate() {
         const autoUpdate = localStorage.getItem("autoUpdate");
@@ -21,10 +22,10 @@ const settings = {
         return Math.max(
             updateFrequencySeconds,
             3600,
-        )
+        );
     },
     set updateFrequencySeconds(updateFrequencySeconds) {
-        updateFrequencySeconds = Number.parseInt(updateFrequencySeconds)
+        updateFrequencySeconds = Number.parseInt(updateFrequencySeconds);
         localStorage.setItem(
             "updateFrequencySeconds",
             // We enforce that the automatic update frequency is not less than one hour. (The indices do not update this
@@ -40,7 +41,7 @@ const settings = {
         return new Date(lastUpdate);
     },
     set lastUpdate(date) {
-        localStorage.setItem("lastUpdate", date.getTime().toString())
+        localStorage.setItem("lastUpdate", date.getTime().toString());
     },
     lastUpdateNow() {
         const now = new Date();
@@ -49,12 +50,13 @@ const settings = {
     },
 };
 
+/* exported CONSTANTS */
 const CONSTANTS = {
     INDEX: {
         BASE_URL: "https://raw.githubusercontent.com/pitkley/aws-search-extension",
         REF: "indices",
         forIndexId(indexId) {
             return `${this.BASE_URL}/${this.REF}/${indexId}.json`;
-        }
-    }
-}
+        },
+    },
+};

@@ -6,6 +6,13 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     CONSTANTS,
+     c,
+     lengthThenLexicographicSort,
+*/
+
+/* exported ServiceOrGlobalOperationSearcher */
 class ServiceOrGlobalOperationSearcher {
     constructor(name, indexId, services, globalSearcher, serviceSearcher) {
         this.name = name;
@@ -19,14 +26,14 @@ class ServiceOrGlobalOperationSearcher {
         this.serviceSearcher = serviceSearcher;
     }
 
-    updateFromRawIndex(rawIndex) {
+    updateFromRawIndex(_rawIndex) {
     }
 
     async updateIndexFromGithub() {
         // Retrieve pre-built JSON-index from GitHub.
         const response = await fetch(CONSTANTS.INDEX.forIndexId(this.indexId));
         if (response.status >= 400) {
-            throw new Error(`Could not retrieve index file for ${this.indexId}-index, returned status: ${response.status} ${response.statusText}`)
+            throw new Error(`Could not retrieve index file for ${this.indexId}-index, returned status: ${response.status} ${response.statusText}`);
         }
         const indexData = await response.json();
 
@@ -70,9 +77,9 @@ class ServiceOrGlobalOperationSearcher {
         }];
     }
 
-    documentationUrl(doc) {
+    documentationUrl(_doc) {
     }
 
-    searchUrl(query) {
+    searchUrl(_query) {
     }
 }

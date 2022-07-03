@@ -6,6 +6,12 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     c,
+     COMMAND_PREFIX,
+*/
+
+/* exported HelpCommand */
 class HelpCommand extends Command {
     constructor() {
         super("help", "Show the help messages.");

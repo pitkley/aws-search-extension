@@ -16,7 +16,7 @@ const semver = (version) => {
         minor: Number.parseInt(minor),
         patch: Number.parseInt(patch),
     };
-}
+};
 
 const extensionUpdated = async ({currentVersion, previousVersion}) => {
     if (currentVersion === previousVersion)
@@ -70,4 +70,4 @@ const installListener = async ({previousVersion, reason}) => {
     });
 };
 
-browser.runtime.onInstalled.addListener(installListener)
+browser.runtime.onInstalled.addListener(installListener);

@@ -6,6 +6,12 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     c,
+     settings,
+*/
+
+/* exported UpdateCommand */
 class UpdateCommand extends Command {
     constructor(searchers) {
         super("update", "Update indices");
@@ -27,7 +33,7 @@ class UpdateCommand extends Command {
             description: `Press ${c.match("Enter")} to update the search indices.`,
         }, {
             content: "!update",
-            description: `Last update: ${c.match(lastUpdate)}`
+            description: `Last update: ${c.match(lastUpdate)}`,
         }];
     }
 
@@ -37,12 +43,13 @@ class UpdateCommand extends Command {
         // If the update was requested implicitly (i.e. through an Omnibox-hook) where the user did not explicitly
         // request the update, we will only perform the update if the `autoUpdate` setting is enabled.
         if (implicit) {
-            if (!settings.autoUpdate)
+            if (!settings.autoUpdate) {
                 return lastUpdate;
+            }
 
             // Before updating we verify that the last update happened at least as long ago as configured.
             const nowEpoch = new Date().getTime();
-            const lastUpdateEpoch = lastUpdate.getTime()
+            const lastUpdateEpoch = lastUpdate.getTime();
             if (nowEpoch - lastUpdateEpoch < (settings.updateFrequencySeconds * 1000)) {
                 return lastUpdate;
             }

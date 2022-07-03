@@ -6,6 +6,7 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* exported lengthThenLexicographicSort */
 function lengthThenLexicographicSort(a, b) {
     if (a.length !== b.length) {
         return a.length - b.length;
@@ -14,6 +15,8 @@ function lengthThenLexicographicSort(a, b) {
     }
 }
 
+/* exported storageGetOrDefault */
 async function storageGetOrDefault(key, default_) {
     return (await browser.storage.local.get(key))[key] || default_;
 }
+

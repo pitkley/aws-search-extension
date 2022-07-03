@@ -6,6 +6,13 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     FuzzySearch,
+     ServiceOrGlobalOperationSearcher,
+     lengthThenLexicographicSort,
+*/
+
+/* exported CliSearcher */
 class CliSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
         const {
@@ -38,7 +45,7 @@ class CliSearcher extends ServiceOrGlobalOperationSearcher {
             globalOperationIndex.push(...operationEntries);
 
             // Add service-name to service-search index
-            serviceSearchIndex.push({serviceName})
+            serviceSearchIndex.push({serviceName});
         });
         const globalSearcher = new FuzzySearch(
             globalOperationIndex,
@@ -68,11 +75,11 @@ class CliSearcher extends ServiceOrGlobalOperationSearcher {
     }
 
     documentationUrl(doc) {
-        const stem = doc.operation.replace(" ", "/")
-        return `https://docs.aws.amazon.com/cli/latest/reference/${doc.service}/${stem}.html`
+        const stem = doc.operation.replace(" ", "/");
+        return `https://docs.aws.amazon.com/cli/latest/reference/${doc.service}/${stem}.html`;
     }
 
     searchUrl(query) {
-        return `https://docs.aws.amazon.com/cli/latest/search.html?q=${query}&check_keywords=yes&area=default`
+        return `https://docs.aws.amazon.com/cli/latest/search.html?q=${query}&check_keywords=yes&area=default`;
     }
 }
