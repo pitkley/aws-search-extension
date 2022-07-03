@@ -6,6 +6,8 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global settings */
+
 document.addEventListener("DOMContentLoaded", function () {
     const h1 = document.getElementsByTagName("h1")[0];
     h1.innerText += ` to v${browser.runtime.getManifest().version}`;

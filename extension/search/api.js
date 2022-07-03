@@ -6,6 +6,13 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     FuzzySearch,
+     ServiceOrGlobalOperationSearcher,
+     lengthThenLexicographicSort,
+*/
+
+/* exported ApiSearcher */
 class ApiSearcher extends ServiceOrGlobalOperationSearcher {
     constructor(rawIndex) {
         const {
@@ -74,7 +81,7 @@ class ApiSearcher extends ServiceOrGlobalOperationSearcher {
     documentationUrl(doc) {
         if (doc.documentationUrl)
             return doc.documentationUrl;
-        return `https://docs.aws.amazon.com/goto/WebAPI/${doc.service}-${doc.serviceVersion}/${doc.operation}`
+        return `https://docs.aws.amazon.com/goto/WebAPI/${doc.service}-${doc.serviceVersion}/${doc.operation}`;
     }
 
     searchUrl(query) {

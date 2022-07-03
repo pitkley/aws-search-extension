@@ -6,6 +6,14 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+     CONSTANTS,
+     FuzzySearch,
+     c,
+     lengthThenLexicographicSort,
+*/
+
+/* exported CfnSearcher */
 class CfnSearcher {
     constructor(rawIndex) {
         this.updateFromRawIndex(rawIndex);

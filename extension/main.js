@@ -6,6 +6,22 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global
+    ApiSearcher,
+    CfnSearcher,
+    CliSearcher,
+    CommandManager,
+    Compat,
+    HelpCommand,
+    HistoryCommand,
+    Omnibox,
+    UpdateCommand,
+    apiSearchIndex,
+    cfnSearchIndex,
+    cliSearchIndex,
+    storageGetOrDefault,
+*/
+
 const COMMAND_PREFIX = "!";
 const c = new Compat();
 (async () => {
@@ -26,7 +42,7 @@ const c = new Compat();
         updateCommand,
     );
 
-    const defaultSuggestion = `A search-extension for quick, fuzzy-search results for AWS developers!`;
+    const defaultSuggestion = "A search-extension for quick, fuzzy-search results for AWS developers!";
     const omnibox = new Omnibox(defaultSuggestion, c.omniboxPageSize());
 
     omnibox.bootstrap({
@@ -61,17 +77,17 @@ const c = new Compat();
         onAppend: CfnSearcher.prototype.append.bind(cfnSearcher),
     });
 
-    omnibox.addRegexQueryEvent(/^[^\/]+\//, {
+    omnibox.addRegexQueryEvent(/^[^/]+\//, {
         onSearch: (query) => {
             const separatorIndex = query.indexOf("/");
-            const serviceQueryOrName = query.slice(0, separatorIndex)
-            query = query.slice(separatorIndex + 1)
+            const serviceQueryOrName = query.slice(0, separatorIndex);
+            query = query.slice(separatorIndex + 1);
             return apiSearcher.search(serviceQueryOrName, query);
         },
         onFormat: ApiSearcher.prototype.format.bind(apiSearcher),
         onAppend: (query) => {
             const separatorIndex = query.indexOf("/");
-            query = query.slice(separatorIndex + 1)
+            query = query.slice(separatorIndex + 1);
             return apiSearcher.append(query);
         },
     });
@@ -91,14 +107,14 @@ const c = new Compat();
     omnibox.addRegexQueryEvent(/^[^@]+@/, {
         onSearch: (query) => {
             const separatorIndex = query.indexOf("@");
-            const serviceQueryOrName = query.slice(0, separatorIndex)
-            query = query.slice(separatorIndex + 1)
+            const serviceQueryOrName = query.slice(0, separatorIndex);
+            query = query.slice(separatorIndex + 1);
             return cliSearcher.search(serviceQueryOrName, query);
         },
         onFormat: CliSearcher.prototype.format.bind(cliSearcher),
         onAppend: (query) => {
             const separatorIndex = query.indexOf("@");
-            query = query.slice(separatorIndex + 1)
+            query = query.slice(separatorIndex + 1);
             return cliSearcher.append(query);
         },
     });
@@ -118,23 +134,27 @@ const c = new Compat();
     omnibox.addPrefixQueryEvent(COMMAND_PREFIX, {
         onSearch: (query) => {
             return commandManager.execute(query);
-        }
+        },
     });
 
     omnibox.addNoCacheQueries(COMMAND_PREFIX);
 
-    const messageHandler = async ({ action, ...rest }, sender) => {
+    const messageHandler = async ({ action, ...rest }, _sender) => {
         switch (action) {
-            case "scheduleIndexUpdates":
-                return updateCommand.scheduleIndexUpdates(false)
-                    .then(lastUpdate => { return { lastUpdate }; })
-                    .catch(error => { return { error: error.message }; });
-            default:
-                console.error(`Received message for unknown action '${action}'`);
-                return Promise.resolve({
-                    error: "Unknown action",
+        case "scheduleIndexUpdates":
+            return updateCommand.scheduleIndexUpdates(false)
+                .then(lastUpdate => {
+                    return { lastUpdate };
+                })
+                .catch(error => {
+                    return { error: error.message };
                 });
+        default:
+            console.error(`Received message for unknown action '${action}'`);
+            return Promise.resolve({
+                error: "Unknown action",
+            });
         }
     };
-    browser.runtime.onMessage.addListener(messageHandler)
+    browser.runtime.onMessage.addListener(messageHandler);
 })();
