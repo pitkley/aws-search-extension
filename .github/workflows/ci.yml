@@ -60,6 +60,7 @@ jobs:
         submodules: recursive
 
     - run: npm ci
+    - run: npx eslint .
 
     - name: Get submodule commit hashes
       id: submodule-hashes
