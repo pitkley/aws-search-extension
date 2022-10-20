@@ -51,7 +51,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.15.x
+        go-version: 1.19.x
     - name: Install jsonnet
       run: go get github.com/google/go-jsonnet/cmd/jsonnet
     - name: Checkout
