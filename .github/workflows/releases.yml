@@ -40,9 +40,9 @@ jobs:
         awscli_hash="$(git rev-parse @:index-sources/aws-cli)"
         awscloudformationuserguide_hash="$(git rev-parse @:index-sources/aws-cloudformation-user-guide)"
         botocore_hash="$(git rev-parse @:index-sources/botocore)"
-        echo "::set-output name=awscli-hash::${awscli_hash}"
-        echo "::set-output name=awscloudformationuserguide-hash::${awscloudformationuserguide_hash}"
-        echo "::set-output name=botocore-hash::${botocore_hash}"
+        echo "name=awscli-hash::${awscli_hash}" >> $GITHUB_OUTPUT
+        echo "name=awscloudformationuserguide-hash::${awscloudformationuserguide_hash}" >> $GITHUB_OUTPUT
+        echo "name=botocore-hash::${botocore_hash}" >> $GITHUB_OUTPUT
 
     - name: 'aws-cli: index cache'
       id: cache-awscli
@@ -181,7 +181,7 @@ jobs:
       id: tag
       run: |
         if [[ "${{ github.ref }}" =~ ^refs/tags/(.+)$ ]]; then
-          echo "::set-output name=value::${BASH_REMATCH[1]}"
+          echo "name=value::${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
         else
           echo "::error ::Expected a tag"
           exit 1
