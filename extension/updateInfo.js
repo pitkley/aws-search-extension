@@ -57,6 +57,14 @@ const extensionUpdated = async ({currentVersion, previousVersion}) => {
         });
         return;
     }
+    // Update from 1.0.1 -> notify about Manifest V3
+    if (previousMajor === 1 && previousMinor === 0 && previousPatch === 1 &&
+        (currentMajor > previousMajor || currentMinor > previousMinor || currentPatch > previousPatch)) {
+        await browser.tabs.create({
+            url: browser.runtime.getURL("popup/updates/post-1.0.1.html"),
+        });
+        return;
+    }
 };
 
 const installListener = async ({previousVersion, reason}) => {
