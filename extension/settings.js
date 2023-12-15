@@ -6,17 +6,18 @@
 // option. This file may not be copied, modified or distributed
 // except according to those terms.
 
+/* global storage */
 /* exported settings */
 const settings = {
-    get autoUpdate() {
-        const autoUpdate = localStorage.getItem("autoUpdate");
-        return autoUpdate === null || autoUpdate === "true";
+    async getAutoUpdate() {
+        const autoUpdate = await storage.getItem("autoUpdate");
+        return autoUpdate === undefined || autoUpdate === null || autoUpdate === true;
     },
-    set autoUpdate(update) {
-        localStorage.setItem("autoUpdate", update);
+    async setAutoUpdate(update) {
+        await storage.setItem("autoUpdate", update);
     },
-    get updateFrequencySeconds() {
-        const updateFrequencySeconds = Number.parseInt(localStorage.getItem("updateFrequencySeconds")) || 86400;
+    async getUpdateFrequencySeconds() {
+        const updateFrequencySeconds = Number.parseInt(await storage.getItem("updateFrequencySeconds")) || 86400;
         // We enforce that the automatic update frequency is not less than one hour. (The indices do not update this
         // often.)
         return Math.max(
@@ -24,9 +25,9 @@ const settings = {
             3600,
         );
     },
-    set updateFrequencySeconds(updateFrequencySeconds) {
+    async setUpdateFrequencySeconds(updateFrequencySeconds) {
         updateFrequencySeconds = Number.parseInt(updateFrequencySeconds);
-        localStorage.setItem(
+        await storage.setItem(
             "updateFrequencySeconds",
             // We enforce that the automatic update frequency is not less than one hour. (The indices do not update this
             // often.)
@@ -36,16 +37,16 @@ const settings = {
             ).toString(),
         );
     },
-    get lastUpdate() {
-        let lastUpdate = Number.parseInt(localStorage.getItem("lastUpdate")) || 0;
+    async getLastUpdate() {
+        const lastUpdate = Number.parseInt(await storage.getItem("lastUpdate")) || 0;
         return new Date(lastUpdate);
     },
-    set lastUpdate(date) {
-        localStorage.setItem("lastUpdate", date.getTime().toString());
+    async setLastUpdate(date) {
+        await storage.setItem("lastUpdate", date.getTime().toString());
     },
-    lastUpdateNow() {
+    async lastUpdateNow() {
         const now = new Date();
-        this.lastUpdate = now;
+        await this.setLastUpdate(now);
         return now;
     },
 };

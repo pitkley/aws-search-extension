@@ -22,8 +22,8 @@ class UpdateCommand extends Command {
         this.scheduleIndexUpdates(false);
     }
 
-    onBlankResult(_arg) {
-        let lastUpdate = settings.lastUpdate;
+    async onBlankResult(_arg) {
+        let lastUpdate = await settings.getLastUpdate();
         if (lastUpdate.getTime() === 0) {
             lastUpdate = "never";
         }
@@ -38,24 +38,24 @@ class UpdateCommand extends Command {
     }
 
     async scheduleIndexUpdates(implicit = true) {
-        const lastUpdate = settings.lastUpdate;
+        const lastUpdate = await settings.getLastUpdate();
 
         // If the update was requested implicitly (i.e. through an Omnibox-hook) where the user did not explicitly
         // request the update, we will only perform the update if the `autoUpdate` setting is enabled.
         if (implicit) {
-            if (!settings.autoUpdate) {
+            if (!await settings.getAutoUpdate()) {
                 return lastUpdate;
             }
 
             // Before updating we verify that the last update happened at least as long ago as configured.
             const nowEpoch = new Date().getTime();
             const lastUpdateEpoch = lastUpdate.getTime();
-            if (nowEpoch - lastUpdateEpoch < (settings.updateFrequencySeconds * 1000)) {
+            if (nowEpoch - lastUpdateEpoch < (await settings.getUpdateFrequencySeconds() * 1000)) {
                 return lastUpdate;
             }
         }
 
         await Promise.all(this.searchers.map(searcher => searcher.updateIndexFromGithub()));
-        return settings.lastUpdateNow();
+        return await settings.lastUpdateNow();
     }
 }
