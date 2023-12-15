@@ -26,7 +26,8 @@ local json = manifest.new(
              .addBackgroundScripts(utils.js_files('search', ['lib']))
              .addBackgroundScripts(utils.js_files('index', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn', 'cli']))
-             .addBackgroundScripts(['main.js']);
+             .addBackgroundScripts(['main.js'])
+             .addBrowserAction('popup/index.html', packageJson.description);
 
 local browser = std.extVar('browser');
 if browser == 'firefox' then
