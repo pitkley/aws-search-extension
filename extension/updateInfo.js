@@ -37,7 +37,7 @@ const extensionUpdated = async ({currentVersion, previousVersion}) => {
     if (previousMajor === 0 && previousMinor === 3 &&
         (currentMajor > previousMajor || currentMinor > previousMinor)) {
         await browser.tabs.create({
-            url: browser.extension.getURL("popup/updates/post-0.3.x.html"),
+            url: browser.runtime.getURL("popup/updates/post-0.3.x.html"),
         });
         return;
     }
@@ -45,7 +45,7 @@ const extensionUpdated = async ({currentVersion, previousVersion}) => {
     if (previousMajor === 0 && previousMinor === 4 &&
         (currentMajor > previousMajor || currentMinor > previousMinor)) {
         await browser.tabs.create({
-            url: browser.extension.getURL("popup/updates/post-0.4.x.html"),
+            url: browser.runtime.getURL("popup/updates/post-0.4.x.html"),
         });
         return;
     }
@@ -53,7 +53,7 @@ const extensionUpdated = async ({currentVersion, previousVersion}) => {
     if (previousMajor === 1 && previousMinor === 0 && previousPatch === 0 &&
         (currentMajor > previousMajor || currentMinor > previousMinor || currentPatch > previousPatch)) {
         await browser.tabs.create({
-            url: browser.extension.getURL("popup/updates/post-1.0.0.html"),
+            url: browser.runtime.getURL("popup/updates/post-1.0.0.html"),
         });
         return;
     }
