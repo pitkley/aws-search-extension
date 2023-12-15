@@ -16,7 +16,7 @@ class HistoryCommand extends Command {
             });
     }
 
-    onBlankResult(arg) {
+    async onBlankResult(arg) {
         return [{
             content: "no history",
             description: "No history right now, let's search something!"

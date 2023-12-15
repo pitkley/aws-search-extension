@@ -35,7 +35,7 @@ class CommandManager {
             let arg = keywords.join(" ");
             let result = await command.onExecute(arg);
             if (!result || result.length < 1) {
-                result = command.onBlankResult(arg);
+                result = await command.onBlankResult(arg);
             }
             return result;
         } else {

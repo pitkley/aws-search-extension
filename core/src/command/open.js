@@ -19,7 +19,7 @@ class OpenCommand extends Command {
         Omnibox.navigateToUrl(this.url, disposition);
     }
 
-    onBlankResult(arg) {
+    async onBlankResult(arg) {
         return [{
             content: this.blankResult.content,
             description: this.blankResult.description,
