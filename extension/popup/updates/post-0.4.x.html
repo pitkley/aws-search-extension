@@ -11,15 +11,22 @@
 <section>
     <h2>Changes</h2>
     <article>
-        <h3>Automatic index updates are now enabled by default</h3>
+        <h3>Add Manifest V3 compatibility</h3>
         <p>
-            In previous versions of the AWS search extension, automatic updates of the bundled
-            indices were disabled by default, although you could always enable them in the
-            extension's configuration. Starting with version 1.0.0, automatic updates are now
-            enabled by default!
+            For extensions to work in browsers, a so-called "Manifest file" is needed. This file
+            contains information about the extension, such as its name, version, and permissions.
+            Google is discontinuing support for Manifest V2 in Chrome, and will only support
+            Manifest V3 in the future.
         </p>
         <p>
-            You can see and update your current configuration here:
+            To make sure AWS Search Extension will continue to work in Chrome and Chromium-based
+            browsers, this update adds compatibility with Manifest V3.
+        </p>
+        <p>
+            <span style="color: red; font-weight: bold;">Important:</span> unfortunately, the
+            migration to Manifest V3 changes where extensions can store settings. <b>This means that
+            your settings could not be retained in the update and have been reset to the
+            defaults.</b> You can reconfigure them right here:
         </p>
         <table style="border: 1px solid black; margin: auto; width: 60%;">
             <colgroup>
@@ -46,12 +53,35 @@
                     <input type="checkbox" id="autoUpdateCheckbox"/>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <div class="tooltip">
+                        <label for="updateFrequencySecondsInput">
+                            Seconds between index updates
+                            &#9432;
+                        </label>
+                        <span class="text">
+                            If automatic index updates are enabled, the extension will automatically update the indices whenever you
+                            execute a query, as long as the time since the last update is longer ago than the frequency specified here.
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <input type="number"
+                        id="updateFrequencySecondsInput"
+                        min="3600"/>
+                </td>
+            </tr>
             </tbody>
         </table>
+    </article>
+    <article>
+        <h3>Automatic index updates are now enabled by default</h3>
         <p>
-            This setting <b>is remembered</b> when the extension is updated, i.e. you do not have to
-            disable the automatic index updates on every extension update if you don't want them to
-            be enabled.
+            In previous versions of the AWS search extension, automatic updates of the bundled
+            indices were disabled by default, although you could always enable them in the
+            extension's configuration. Starting with version 1.0.0, automatic updates are now
+            enabled by default!
         </p>
         <p>
             <em>
@@ -166,6 +196,7 @@
     </p>
 </section>
 <script src="../../vendored/webextension-polyfill/browser-polyfill.min.js" type="text/javascript"></script>
+<script src="../../core/storage.js" type="text/javascript"></script>
 <script src="../../settings.js" type="text/javascript"></script>
 <script src="updates.js" type="text/javascript"></script>
 </body>

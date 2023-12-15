@@ -18,6 +18,7 @@ while IFS= read -r f; do
 done < <(git ls-files -- \
 '*.js' \
 '*.py' \
+':!:core/' \
 ':!:.eslintrc.js' \
 ':!:extension/index/*.js' \
 )

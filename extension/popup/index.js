@@ -8,25 +8,25 @@
 
 /* global settings */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const autoUpdateCheckbox = document.getElementById("autoUpdateCheckbox");
-    autoUpdateCheckbox.checked = settings.autoUpdate;
-    autoUpdateCheckbox.onchange = function (event) {
-        settings.autoUpdate = event.target.checked;
+    autoUpdateCheckbox.checked = await settings.getAutoUpdate();
+    autoUpdateCheckbox.onchange = async function (event) {
+        await settings.setAutoUpdate(event.target.checked);
     };
 
     const updateFrequencySecondsInput = document.getElementById("updateFrequencySecondsInput");
-    updateFrequencySecondsInput.value = settings.updateFrequencySeconds;
-    updateFrequencySecondsInput.onchange = function (event) {
-        settings.updateFrequencySeconds = event.target.value;
+    updateFrequencySecondsInput.value = await settings.getUpdateFrequencySeconds();
+    updateFrequencySecondsInput.onchange = async function (event) {
+        await settings.setUpdateFrequencySeconds(event.target.value);
     };
 
-    const refreshLastIndexUpdate = (error) => {
+    const refreshLastIndexUpdate = async (error) => {
         let lastUpdate;
         if (error !== undefined) {
             lastUpdate = error;
         } else {
-            lastUpdate = settings.lastUpdate;
+            lastUpdate = await settings.getLastUpdate();
             if (lastUpdate.getTime() === 0) {
                 lastUpdate = "never";
             }
@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
         element.innerText = extensionVersion;
     }
 
-    window.addEventListener("storage", function () {
-        autoUpdateCheckbox.checked = settings.autoUpdate;
-        updateFrequencySecondsInput.value = settings.updateFrequencySeconds;
+    window.addEventListener("storage", async function () {
+        autoUpdateCheckbox.checked = await settings.getAutoUpdate();
+        updateFrequencySecondsInput.value = await settings.getUpdateFrequencySeconds();
     });
 });

@@ -8,7 +8,7 @@
 
 /* global settings */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const h1 = document.getElementsByTagName("h1")[0];
     h1.innerText += ` to v${browser.runtime.getManifest().version}`;
     const changesH2 = document.querySelector("h2#changes");
@@ -18,26 +18,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const autoUpdateCheckbox = document.getElementById("autoUpdateCheckbox");
     if (autoUpdateCheckbox !== null) {
-        autoUpdateCheckbox.checked = settings.autoUpdate;
-        autoUpdateCheckbox.onchange = function (event) {
-            settings.autoUpdate = event.target.checked;
+        autoUpdateCheckbox.checked = await settings.getAutoUpdate();
+        autoUpdateCheckbox.onchange = async function (event) {
+            await settings.setAutoUpdate(event.target.checked);
         };
     }
 
     const updateFrequencySecondsInput = document.getElementById("updateFrequencySecondsInput");
     if (updateFrequencySecondsInput !== null) {
-        updateFrequencySecondsInput.value = settings.updateFrequencySeconds;
-        updateFrequencySecondsInput.onchange = function (event) {
-            settings.updateFrequencySeconds = event.target.value;
+        updateFrequencySecondsInput.value = await settings.getUpdateFrequencySeconds();
+        updateFrequencySecondsInput.onchange = async function (event) {
+            await settings.setUpdateFrequencySeconds(event.target.value);
         };
     }
 
-    window.addEventListener("storage", function () {
+    window.addEventListener("storage", async function () {
         if (autoUpdateCheckbox !== null) {
-            autoUpdateCheckbox.checked = settings.autoUpdate;
+            autoUpdateCheckbox.checked = await settings.getAutoUpdate();
         }
         if (updateFrequencySecondsInput !== null) {
-            updateFrequencySecondsInput.value = settings.updateFrequencySeconds;
+            updateFrequencySecondsInput.value = await settings.getUpdateFrequencySeconds();
         }
     });
 });
