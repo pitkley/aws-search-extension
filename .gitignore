@@ -4,6 +4,7 @@ node_modules/
 .venv/
 .indices/
 extension/manifest.json
+extension/core
 extension/index/
 extension/vendored/
 json-indices/
