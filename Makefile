@@ -12,8 +12,11 @@ cleanup-unlisted:
 
 firefox.unlisted: prepare-unlisted firefox cleanup-unlisted
 
-empty-indices: empty-index-api empty-index-cfn empty-index-cli
+empty-indices: create-index-directory empty-index-api empty-index-cfn empty-index-cli
 	@echo "Empty indices created (or indices already existed)"
+
+create-index-directory:
+	@mkdir -p extension/index
 
 empty-index-api:
 	$(if \

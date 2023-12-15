@@ -2,8 +2,8 @@
 
 ## Dependencies
 
-* NodeJS >=16 (earlier versions will probably work, but are not tested)
-* NPM >=8 (earlier versions might work, although package-lock-format version 2 support is required)
+* NodeJS >=20 (earlier versions will probably work, but are not tested)
+* NPM >=9 (earlier versions might work, although package-lock-format version 3 support is required)
 * A Jsonnet implementation compatible with the spec. Both of the following are known to work:
     * Go: <https://github.com/google/go-jsonnet>
     * C++: <https://github.com/google/jsonnet>
