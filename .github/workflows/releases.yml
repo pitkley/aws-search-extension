@@ -40,9 +40,9 @@ jobs:
         awscli_hash="$(git rev-parse @:index-sources/aws-cli)"
         cfnlint_hash="$(git rev-parse @:index-sources/cfn-lint)"
         botocore_hash="$(git rev-parse @:index-sources/botocore)"
-        echo "name=awscli-hash::${awscli_hash}" >> $GITHUB_OUTPUT
-        echo "name=cfnlint-hash::${cfnlint_hash}" >> $GITHUB_OUTPUT
-        echo "name=botocore-hash::${botocore_hash}" >> $GITHUB_OUTPUT
+        echo "awscli-hash=${awscli_hash}" >> $GITHUB_OUTPUT
+        echo "cfnlint-hash=${cfnlint_hash}" >> $GITHUB_OUTPUT
+        echo "botocore-hash=${botocore_hash}" >> $GITHUB_OUTPUT
 
     - name: 'aws-cli: index cache'
       id: cache-awscli

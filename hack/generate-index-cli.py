@@ -158,9 +158,13 @@ def main(
             fh.write(";")
 
 
-if __name__ == '__main__':
-    if sys.version_info.major < 3 or (sys.version_info.major == 3 and sys.version_info.minor <= 9):
-        sys.exit("Python 3.9+ required")
+if __name__ == "__main__":
+    if sys.version_info.major < 3 or (
+        sys.version_info.major == 3 and sys.version_info.minor < 9
+    ):
+        sys.exit(
+            f"Python 3.9+ required. Currently running on:\n\nPython {sys.version})"
+        )
 
     export_as_json = "--export-as-json" in sys.argv
     main(
