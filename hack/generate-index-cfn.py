@@ -8,136 +8,174 @@
 # option. This file may not be copied, modified or distributed
 # except according to those terms.
 
-import json
-import sys
-from collections import defaultdict
 from dataclasses import dataclass
-from enum import Enum, auto
-from itertools import chain
 from pathlib import Path
 from typing import Optional
+import json
+import sys
 
 
-class State(Enum):
-    ITEM = auto()
-    DESCRIPTION = auto()
+SCRIPT_DIRECTORY = Path(__file__).parent
+CLOUDSPECS_PATH = (
+    SCRIPT_DIRECTORY.parent
+    / "index-sources"
+    / "cfn-lint"
+    / "src"
+    / "cfnlint"
+    / "data"
+    / "CloudSpecs"
+)
+CFN_USER_GUIDE_PREFIX = (
+    "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/"
+)
 
 
 @dataclass
-class IndexItem:
+class Item:
     name: str
-    path: Path
-    description: str
+    documentation_url: str
     source: str
+    summary: Optional[str] = None
 
 
-def process_path(path: Path, source: str) -> Optional[IndexItem]:
-    with open(path, "r") as fh:
-        parse_state = State.ITEM
-        item = None
-        for line in fh.readlines():
-            if parse_state == State.ITEM:
-                if not line.startswith("# "):
-                    continue
-                item = line.removeprefix("# ").split("<", maxsplit=1)[0].strip()
-                parse_state = State.DESCRIPTION
-            elif parse_state == State.DESCRIPTION:
-                line = line.strip()
-                if line == "":
-                    continue
-                description = line.replace("\\", "")
-                break
-        else:
-            # If we reach this `else`, the for-loop exited normally, which means we did not identify both an item and a
-            # description. If we are just missing the description, we take the item name. If we are missing both, we
-            # can't return a valid `IndexItem`.
-            if item is None:
-                return None
-            description = item
-    return IndexItem(name=item, path=path, description=description, source=source)
+def get_items_from_cloudspecs() -> dict[str, Item]:
+    print("Reading CloudSpecs")
+    items = {}
+
+    for cloudspec_path in CLOUDSPECS_PATH.glob("*.json"):
+        with cloudspec_path.open("r") as fh:
+            cloudspec = json.load(fh)
+
+        for resource_name, resource in cloudspec["ResourceTypes"].items():
+            if resource == "CACHED":
+                continue
+
+            if resource_name not in items:
+                items[resource_name] = Item(
+                    name=resource_name,
+                    documentation_url=resource["Documentation"].replace(
+                        "http://", "https://"
+                    ),
+                    source="cfn",
+                )
+
+            if properties := resource.get("Properties"):
+                for property_name, property in properties.items():
+                    item_name = f"{resource_name} {property_name}"
+
+                    if item_name in items:
+                        continue
+                    if property == "CACHED":
+                        continue
+                    if "Documentation" not in property:
+                        print(f" - Skipping {item_name} (no documentation)")
+                        continue
+
+                    items[item_name] = Item(
+                        name=item_name,
+                        documentation_url=property["Documentation"].replace(
+                            "http://", "https://"
+                        ),
+                        source="cfn",
+                    )
+
+        for property_name, property in cloudspec["PropertyTypes"].items():
+            if property_name in items:
+                continue
+            if property == "CACHED":
+                continue
+            if "Documentation" not in property:
+                print(f" - Skipping {property_name} (no documentation)")
+                continue
+
+            items[property_name] = Item(
+                name=property_name,
+                documentation_url=property["Documentation"].replace(
+                    "http://", "https://"
+                ),
+                source="cfn",
+            )
+
+        for intrinsic_name, intrinsic in cloudspec["IntrinsicTypes"].items():
+            if intrinsic == "CACHED":
+                continue
+            if intrinsic_name in items:
+                continue
+
+            items[intrinsic_name] = Item(
+                name=intrinsic_name,
+                documentation_url=intrinsic["Documentation"].replace(
+                    "http://", "https://"
+                ),
+                source="cfn",
+            )
+    if not items:
+        raise RuntimeError(
+            "No items found. This could indicate that the CloudSpecs have "
+            "moved within the cfn-lint repository."
+        )
+
+    return items
 
 
-def main(
-    cfn_docs_root: Path,
-    sam_docs_root: Path,
-    *,
-    export_as_json: bool,
-):
-    # Generate the internal index representation for the available files
-    index = defaultdict(list)
-    for path in cfn_docs_root.iterdir():
-        if not path.is_file():
-            continue
-        index_item = process_path(path, "cfn")
-        if not index_item:
-            continue
-        index[index_item.name].append(index_item)
-    for path in sam_docs_root.iterdir():
-        if not path.is_file():
-            continue
-        index_item = process_path(path, "sam")
-        if not index_item:
-            continue
-        index[index_item.name].append(index_item)
+def write_index_v1(items: dict[str, Item], *, export_as_json: bool) -> None:
+    if not export_as_json:
+        print("Skipping JS file for index v1 (should not be bundled anymore)")
+        return
 
-    # Convert the internal index representation into the final, simpler representation used by the extension.
-    final_index = {}
-    for key, index_items in index.items():
-        if len(index_items) <= 0:
-            continue
-        elif len(index_items) == 1:
-            index_item = index_items[0]
-            final_index[key] = [
-                index_item.path.stem,
-                index_item.description,
-                index_item.source,
-            ]
-        else:
-            # We have two or more items that share the same name. To be able to show all of them, we add their filename
-            # to the item name.
-            for index_item in index_items:
-                compound_key = f"{key} - {index_item.path.stem}"
-                final_index[compound_key] = [
-                    index_item.path.stem,
-                    index_item.description,
-                    index_item.source,
-                ]
+    output_path = Path("json-indices/cfn.json")
+    output_path.parent.mkdir(exist_ok=True)
 
-    # Persist the final-index to the extension
-    index_file = Path("json-indices/cfn.json") if export_as_json else Path("extension/index/cfn.js")
-    index_file.parent.mkdir(exist_ok=True)
-    with index_file.open("w") as fh:
-        if not export_as_json:
-            fh.write("// Descriptions retrieved from:\n")
-            fh.write("// - https://github.com/awsdocs/aws-cloudformation-user-guide/\n")
-            fh.write("//   They are licensed under the Creative Commons Attribution-ShareAlike 4.0 International Public License, copyright Amazon Web Services, Inc.\n")
-            fh.write("// - https://github.com/awsdocs/aws-sam-developer-guide/\n")
-            fh.write("// They are licensed under the Apache License 2.0, copyright Amazon Web Services, Inc.\n")
-            fh.write("var cfnSearchIndex={\n")
-        else:
-            fh.write("{\n")
+    print(f"Writing index v1 to {output_path}")
 
-        service_count = len(final_index.keys())
-        for index, (service_name, service) in enumerate(sorted(final_index.items()), start=1):
-            service_name = service_name.replace("\\", "")
-            fh.write(f"  \"{service_name}\":")
-            json.dump(service, fh, sort_keys=True)
-            if not export_as_json or index != service_count:
+    with output_path.open("w") as fh:
+        fh.write("{\n")
+
+        item_count = len(items.keys())
+        for index, (item_name, item) in enumerate(sorted(items.items()), start=1):
+            if not item.documentation_url.startswith(CFN_USER_GUIDE_PREFIX):
+                print(
+                    f" - Skipping {item_name}, doc-URL not compatible with v1 index: {item.documentation_url}"
+                )
+                continue
+
+            fh.write(f'  "{item_name}":')
+
+            documentation_path = item.documentation_url.removeprefix(
+                CFN_USER_GUIDE_PREFIX
+            )
+            documentation_path = documentation_path.split(".html")[0]
+            json.dump(
+                [
+                    documentation_path,
+                    item.summary if item.summary else "",
+                    item.source,
+                ],
+                fh,
+                sort_keys=True,
+            )
+            if index != item_count:
                 fh.write(",")
             fh.write("\n")
 
         fh.write("}")
-        if not export_as_json:
-            fh.write(";\n")
 
 
-if __name__ == '__main__':
-    if sys.version_info.major < 3 or (sys.version_info.major == 3 and sys.version_info.minor <= 9):
-        sys.exit("Python 3.9+ required")
+def main(
+    *,
+    export_as_json: bool,
+):
+    items = get_items_from_cloudspecs()
+    write_index_v1(items, export_as_json=export_as_json)
+
+
+if __name__ == "__main__":
+    if sys.version_info.major < 3 or (
+        sys.version_info.major == 3 and sys.version_info.minor < 9
+    ):
+        sys.exit(
+            f"Python 3.9+ required. Currently running on:\n\nPython {sys.version})"
+        )
 
     export_as_json = "--export-as-json" in sys.argv
-    main(
-        Path("index-sources/aws-cloudformation-user-guide/doc_source"),
-        Path("index-sources/aws-sam-developer-guide/doc_source"),
-        export_as_json=export_as_json,
-    )
+    main(export_as_json=export_as_json)

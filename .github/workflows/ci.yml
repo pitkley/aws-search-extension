@@ -36,7 +36,7 @@ jobs:
 
     outputs:
       awscli-hash: ${{ steps.submodule-hashes.outputs.awscli-hash }}
-      awscloudformationuserguide-hash: ${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}
+      cfnlint-hash: ${{ steps.submodule-hashes.outputs.cfnlint-hash }}
       botocore-hash: ${{ steps.submodule-hashes.outputs.botocore-hash }}
 
     steps:
@@ -66,10 +66,10 @@ jobs:
       id: submodule-hashes
       run: |
         awscli_hash="$(git rev-parse @:index-sources/aws-cli)"
-        awscloudformationuserguide_hash="$(git rev-parse @:index-sources/aws-cloudformation-user-guide)"
+        cfnlint_hash="$(git rev-parse @:index-sources/cfn-lint)"
         botocore_hash="$(git rev-parse @:index-sources/botocore)"
         echo "name=awscli-hash::${awscli_hash}" >> $GITHUB_OUTPUT
-        echo "name=awscloudformationuserguide-hash::${awscloudformationuserguide_hash}" >> $GITHUB_OUTPUT
+        echo "name=cfnlint-hash::${cfnlint_hash}" >> $GITHUB_OUTPUT
         echo "name=botocore-hash::${botocore_hash}" >> $GITHUB_OUTPUT
 
     - name: 'aws-cli: index cache'
@@ -81,14 +81,14 @@ jobs:
           extension/index/cli.js
           json-indices/cli.json
         key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}-${{ hashFiles('hack/generate-index-cli.py') }}
-    - name: 'aws-cloudformation-user-guide: index cache'
-      id: cache-awscloudformationuserguide
+    - name: 'cfn-lint: index cache'
+      id: cache-cfnlint
       uses: actions/cache@v3
       with:
         path: |
           extension/index/cfn.js
           json-indices/cfn.json
-        key: indices-awscloudformationuserguide-${{ steps.submodule-hashes.outputs.awscloudformationuserguide-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
+        key: indices-cfnlint-${{ steps.submodule-hashes.outputs.cfnlint-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
       uses: actions/cache@v3
@@ -118,13 +118,13 @@ jobs:
           -s hack/index-schemas/cli.schema.json \
           -d json-indices/cli.json
 
-    - name: 'aws-cloudformation-user-guide: Generate index'
-      if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
+    - name: 'cfn-lint: Generate index'
+      if: steps.cache-cfnlint.outputs.cache-hit != 'true'
       run: |
         hack/generate-index-cfn.py
         hack/generate-index-cfn.py --export-as-json
-    - name: 'aws-cloudformation-user-guide: verify generated index'
-      if: steps.cache-awscloudformationuserguide.outputs.cache-hit != 'true'
+    - name: 'cfn-lint: verify generated index'
+      if: steps.cache-cfnlint.outputs.cache-hit != 'true'
       run: |
         node_modules/.bin/ajv validate \
           -s hack/index-schemas/cfn.schema.json \
@@ -254,7 +254,7 @@ jobs:
         git_commit \
           "cfn.json" \
           "☁️ cfn: index updated" \
-          "Based on awsdocs/aws-cloudformation-user-guide#${{ needs.build-and-test.outputs.awscloudformationuserguide-hash }}" \
+          "Based on aws-cloudformation/cfn-lint#${{ needs.build-and-test.outputs.cfnlint-hash }}" \
           "☁️ cfn: created commit" \
           "☁️ cfn: no update needed, not committing" \
           ;
