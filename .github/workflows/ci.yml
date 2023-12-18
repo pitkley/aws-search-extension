@@ -173,7 +173,7 @@ jobs:
         artifacts: web-ext-artifacts/edge/
 
     - name: Upload extension-ZIPs as artifact to workflow
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: aws-search-extension
         path: |
@@ -181,7 +181,7 @@ jobs:
           ${{ steps.web-ext-build-chrome.outputs.target }}
           ${{ steps.web-ext-build-edge.outputs.target }}
     - name: Upload JSON-indices as artifact to workflow
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: indices
         path: |
