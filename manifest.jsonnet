@@ -29,7 +29,7 @@ else
              .addBackgroundScripts(['vendored/fuzzy-search/FuzzySearch.js'])
              .addBackgroundScripts(utils.js_files('command', ['help', 'update']))
              .addBackgroundScripts(utils.js_files('search', ['lib']))
-             .addBackgroundScripts(utils.js_files('index', ['api', 'cfn', 'cli']))
+             .addBackgroundScripts(utils.js_files('index', ['api', 'cfn.v2', 'cli']))
              .addBackgroundScripts(utils.js_files('search', ['api', 'cfn', 'cli']))
              .addBackgroundScripts(['main.js'])
              .addBrowserAction('popup/index.html', packageJson.description)
