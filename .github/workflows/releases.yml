@@ -28,7 +28,7 @@ jobs:
     - name: Install jsonnet
       run: go get github.com/google/go-jsonnet/cmd/jsonnet
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
