@@ -26,7 +26,7 @@ importScripts(
     "command/update.js",
     "search/lib.js",
     "index/api.js",
-    "index/cfn.js",
+    "index/cfn.v2.js",
     "index/cli.js",
     "search/api.js",
     "search/cfn.js",

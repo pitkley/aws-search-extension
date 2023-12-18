@@ -20,17 +20,17 @@ class CfnSearcher {
     }
 
     static processRawIndex(rawIndex) {
-        const index = Object.entries(rawIndex).map(([name, [path, description, source]]) => {
+        const index = Object.entries(rawIndex).map(([name, [url, description, source]]) => {
             return {
                 name,
-                path,
+                url,
                 description,
                 source,
             };
         }).sort(({name: a}, {name: b}) => lengthThenLexicographicSort(a, b));
         const searcher = new FuzzySearch(
             index,
-            ["name", "description"],
+            ["name"],
             {sort: true},
         );
 
@@ -48,7 +48,7 @@ class CfnSearcher {
 
     async updateIndexFromGithub() {
         // Retrieve pre-built JSON-index from GitHub.
-        const response = await fetch(CONSTANTS.INDEX.forIndexId("cfn"));
+        const response = await fetch(CONSTANTS.INDEX.forIndexId("cfn.v2"));
         const indexData = await response.json();
 
         // Store the index in the extension-storage.
@@ -63,13 +63,16 @@ class CfnSearcher {
     }
 
     format(index, doc) {
-        let content;
-        let description = `${c.match(c.escape(doc.name))} - ${c.dim(c.escape(doc.description))}`;
+        const content = doc.url;
+
+        let description = `${c.match(c.escape(doc.name))}`;
+        if (doc.description) {
+            description = description + ` - ${c.dim(c.escape(doc.description))}`;
+        }
+
         if (doc.source === "sam") {
-            content = `https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/${doc.path}.html`;
             description = "[SAM] " + description;
         } else {
-            content = `https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/${doc.path}.html`;
             description = "[CFN] " + description;
         }
 

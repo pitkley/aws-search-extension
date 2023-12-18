@@ -86,8 +86,9 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          extension/index/cfn.js
+          extension/index/cfn.v2.js
           json-indices/cfn.json
+          json-indices/cfn.v2.json
         key: indices-cfnlint-${{ steps.submodule-hashes.outputs.cfnlint-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
@@ -111,12 +112,18 @@ jobs:
       run: |
         hack/generate-index-cli.py
         hack/generate-index-cli.py --export-as-json
-    - name: 'aws-cli: verify generated index'
+    - name: 'aws-cli: verify generated index (v1)'
       if: steps.cache-awscli.outputs.cache-hit != 'true'
       run: |
         node_modules/.bin/ajv validate \
           -s hack/index-schemas/cli.schema.json \
           -d json-indices/cli.json
+    - name: 'aws-cli: verify generated index (v2)'
+      if: steps.cache-awscli.outputs.cache-hit != 'true'
+      run: |
+        node_modules/.bin/ajv validate \
+          -s hack/index-schemas/cli.v2.schema.json \
+          -d json-indices/cli.v2.json
 
     - name: 'cfn-lint: Generate index'
       if: steps.cache-cfnlint.outputs.cache-hit != 'true'

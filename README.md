@@ -128,7 +128,7 @@ You can use the following kinds of search-queries:
 
     ```
     https://raw.githubusercontent.com/pitkley/aws-search-extension/indices/api.json
-    https://raw.githubusercontent.com/pitkley/aws-search-extension/indices/cfn.json
+    https://raw.githubusercontent.com/pitkley/aws-search-extension/indices/cfn.v2.json
     https://raw.githubusercontent.com/pitkley/aws-search-extension/indices/cli.json
     ```
 

@@ -17,7 +17,7 @@
     Omnibox,
     UpdateCommand,
     apiSearchIndex,
-    cfnSearchIndex,
+    cfnV2SearchIndex,
     cliSearchIndex,
     storageGetOrDefault,
 */
@@ -26,7 +26,7 @@ const COMMAND_PREFIX = "!";
 const c = new Compat();
 (async () => {
     const apiSearcher = new ApiSearcher(await storageGetOrDefault("index-api", apiSearchIndex));
-    const cfnSearcher = new CfnSearcher(await storageGetOrDefault("index-cfn", cfnSearchIndex));
+    const cfnSearcher = new CfnSearcher(await storageGetOrDefault("index-cfn", cfnV2SearchIndex));
     const cliSearcher = new CliSearcher(await storageGetOrDefault("index-cli", cliSearchIndex));
 
     const updateCommand = new UpdateCommand([
