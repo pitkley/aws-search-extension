@@ -25,9 +25,14 @@ CLOUDSPECS_PATH = (
     / "data"
     / "CloudSpecs"
 )
+SAM_PATH = SCRIPT_DIRECTORY.parent / "index-sources" / "sam.json"
 CFN_USER_GUIDE_PREFIX = (
     "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/"
 )
+SAM_USER_GUIDE_PREFIX = (
+    "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/"
+)
+SAM_USER_GUIDE_URL = f"{SAM_USER_GUIDE_PREFIX}{{filename}}.html"
 
 
 @dataclass
@@ -118,6 +123,25 @@ def get_items_from_cloudspecs() -> dict[str, Item]:
     return items
 
 
+def enrich_with_sam_items(items):
+    print("Reading SAM items")
+    with SAM_PATH.open("r") as fh:
+        sam = json.load(fh)
+
+    for item_name, item in sam["items"].items():
+        if item_name in items:
+            print(f" - Skipping {item_name} (already in CloudSpecs)")
+            continue
+        items[item_name] = Item(
+            name=item_name,
+            documentation_url=SAM_USER_GUIDE_URL.format(filename=item["filename"]),
+            source="sam",
+            summary=item["description"],
+        )
+
+    return sam["_attribution"]
+
+
 def write_index_v1(items: dict[str, Item], *, export_as_json: bool) -> None:
     if not export_as_json:
         print("Skipping JS file for index v1 (should not be bundled anymore)")
@@ -133,17 +157,20 @@ def write_index_v1(items: dict[str, Item], *, export_as_json: bool) -> None:
 
         item_count = len(items.keys())
         for index, (item_name, item) in enumerate(sorted(items.items()), start=1):
-            if not item.documentation_url.startswith(CFN_USER_GUIDE_PREFIX):
+            if not item.documentation_url.startswith(
+                CFN_USER_GUIDE_PREFIX
+            ) and not item.documentation_url.startswith(SAM_USER_GUIDE_PREFIX):
                 print(
                     f" - Skipping {item_name}, doc-URL not compatible with v1 index: {item.documentation_url}"
                 )
                 continue
 
-            fh.write(f'  "{item_name}":')
+            fh.write(f"  {json.dumps(item_name)}:")
 
             documentation_path = item.documentation_url.removeprefix(
                 CFN_USER_GUIDE_PREFIX
             )
+            documentation_path = documentation_path.removeprefix(SAM_USER_GUIDE_PREFIX)
             documentation_path = documentation_path.split(".html")[0]
             json.dump(
                 [
@@ -166,6 +193,7 @@ def main(
     export_as_json: bool,
 ):
     items = get_items_from_cloudspecs()
+    sam_attribution = enrich_with_sam_items(items)
     write_index_v1(items, export_as_json=export_as_json)
 
 
