@@ -2,7 +2,7 @@ include core/extension.mk
 
 .PHONY: chrome
 
-indices = extension/index/api.js extension/index/cfn.js extension/index/cli.js
+indices = extension/index/api.js extension/index/cfn.v2.js extension/index/cli.js
 
 prepare-unlisted:
 	@printf "unlisted" > hack/jsonnet-fragments/version-suffix
@@ -26,9 +26,9 @@ empty-index-api:
 	)
 empty-index-cfn:
 	$(if \
-		$(wildcard extension/index/cfn.js), \
+		$(wildcard extension/index/cfn.v2.js), \
 		, \
-		echo "var cfnSearchIndex={};" > extension/index/cfn.js \
+		echo "var cfnV2SearchIndex={};" > extension/index/cfn.v2.js \
 	)
 empty-index-cli:
 	$(if \
@@ -43,7 +43,7 @@ extension/index/api.js:
 	@echo "Generating API index"
 	hack/generate-index-api.py
 
-extension/index/cfn.js:
+extension/index/cfn.v2.js:
 	@echo "Generating CFN index"
 	hack/generate-index-cfn.py
 

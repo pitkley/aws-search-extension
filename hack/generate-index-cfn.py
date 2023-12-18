@@ -179,13 +179,63 @@ def write_index_v1(items: dict[str, Item], *, export_as_json: bool) -> None:
                     item.source,
                 ],
                 fh,
-                sort_keys=True,
             )
             if index != item_count:
                 fh.write(",")
             fh.write("\n")
 
         fh.write("}")
+
+
+def write_index_v2(
+    items: dict[str, Item],
+    sam_attribution,
+    *,
+    export_as_json: bool,
+) -> None:
+    output_path = (
+        Path("json-indices/cfn.v2.json")
+        if export_as_json
+        else Path("extension/index/cfn.v2.js")
+    )
+    output_path.parent.mkdir(exist_ok=True)
+
+    print(f"Writing index v2 to {output_path}")
+
+    with output_path.open("w") as fh:
+        if not export_as_json:
+            fh.write("// Structure for CloudFormation-items retrieved from:\n")
+            fh.write(f"// - https://github.com/aws-cloudformation/cfn-lint\n")
+            fh.write("// They are licensed under MIT No Attribution.\n")
+            fh.write("//\n")
+            fh.write("// Structure and descriptions for SAM-items retrieved from:\n")
+            fh.write(f"// - {sam_attribution['ContentRetrievedFrom']}\n")
+            fh.write(
+                f"// They are licensed under {sam_attribution['License']}, {sam_attribution['Copyright']}\n"
+            )
+            fh.write("var cfnV2SearchIndex={\n")
+        else:
+            fh.write("{\n")
+
+        item_count = len(items.keys())
+        for index, (item_name, item) in enumerate(sorted(items.items()), start=1):
+            fh.write(f"  {json.dumps(item_name)}:")
+
+            json.dump(
+                [
+                    item.documentation_url,
+                    item.summary,
+                    item.source,
+                ],
+                fh,
+            )
+            if not export_as_json or index != item_count:
+                fh.write(",")
+            fh.write("\n")
+
+        fh.write("}")
+        if not export_as_json:
+            fh.write(";\n")
 
 
 def main(
@@ -195,6 +245,7 @@ def main(
     items = get_items_from_cloudspecs()
     sam_attribution = enrich_with_sam_items(items)
     write_index_v1(items, export_as_json=export_as_json)
+    write_index_v2(items, sam_attribution, export_as_json=export_as_json)
 
 
 if __name__ == "__main__":
