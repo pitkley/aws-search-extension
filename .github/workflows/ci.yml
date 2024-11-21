@@ -74,7 +74,7 @@ jobs:
 
     - name: 'aws-cli: index cache'
       id: cache-awscli
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           index-sources/aws-cli/doc/build/
@@ -83,7 +83,7 @@ jobs:
         key: indices-awscli-${{ steps.submodule-hashes.outputs.awscli-hash }}-${{ hashFiles('hack/generate-index-cli.py') }}
     - name: 'cfn-lint: index cache'
       id: cache-cfnlint
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           extension/index/cfn.v2.js
@@ -92,7 +92,7 @@ jobs:
         key: indices-cfnlint-${{ steps.submodule-hashes.outputs.cfnlint-hash }}-${{ hashFiles('hack/generate-index-cfn.py') }}
     - name: 'botocore: index cache'
       id: cache-botocore
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           extension/index/api.js
