@@ -12,7 +12,7 @@
     "ajv-cli": "5.0.0",
     "eslint": "^8.56.0",
     "vendor-copy": "3.0.1",
-    "web-ext": "7.9.0"
+    "web-ext": "7.11.0"
   },
   "scripts": {
     "postinstall": "vendor-copy",
